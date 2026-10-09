@@ -1,0 +1,235 @@
+
+:root {
+  color-scheme: dark;
+  --bg: #08070c;
+  --surface: #100e17;
+  --surface-2: #181421;
+  --border: #292333;
+  --purple: #982cff;
+  --purple-light: #c879ff;
+  --text: #f7f5fa;
+  --muted: #a49bad;
+  --success: #43d9a3;
+  --danger: #ff6b83;
+  --radius: 14px;
+  --shadow: 0 24px 80px #0008;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--purple-light);
+  text-decoration: none;
+}
+
+.auth-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 15% 25%, #56118c26, transparent 45%),
+    var(--bg);
+}
+
+.login-layout {
+  width: min(1100px, 92%);
+  min-height: 100vh;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  align-items: center;
+  gap: 80px;
+  padding: 48px 0;
+}
+
+.login-brand {
+  max-width: 570px;
+}
+
+.login-logo {
+  display: block;
+  width: min(100%, 360px);
+  height: auto;
+  margin-bottom: 38px;
+  object-fit: contain;
+}
+
+.eyebrow {
+  color: var(--purple-light);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.login-brand h1 {
+  margin: 18px 0;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.login-brand > .muted {
+  max-width: 420px;
+  font-size: 15px;
+}
+
+.brand-caption {
+  margin-top: 48px;
+  color: var(--purple-light);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 5px;
+}
+
+.login-card {
+  padding: 34px;
+  background: linear-gradient(145deg, #171320, #0e0c13);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+}
+
+.login-card h2 {
+  margin: 10px 0 4px;
+  font-size: 25px;
+  letter-spacing: -0.7px;
+}
+
+.login-card form {
+  margin-top: 28px;
+}
+
+.login-card label,
+.field label {
+  display: block;
+  margin: 18px 0 8px;
+  color: #e8e2ef;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  color: var(--text);
+  background: #0b0910;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px #982cff20;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #71687c;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  background: var(--surface-2);
+  font-weight: 700;
+}
+
+.btn-primary {
+  color: white;
+  background: linear-gradient(100deg, #7920db, #ad43ff);
+  border-color: transparent;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.12);
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 24px;
+}
+
+.form-message {
+  min-height: 22px;
+  color: var(--purple-light);
+  font-size: 12px;
+}
+
+.form-message.error {
+  color: var(--danger);
+}
+
+.auth-footer {
+  padding-top: 18px;
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  text-align: center;
+  font-size: 11px;
+}
+
+.mobile-logo {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .login-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 460px;
+  }
+
+  .login-brand {
+    display: none;
+  }
+
+  .mobile-logo {
+    display: block;
+    margin-bottom: 24px;
+  }
+
+  .mobile-logo img {
+    width: 180px;
+    max-width: 100%;
+  }
+
+  .login-card {
+    padding: 26px;
+  }
+}
