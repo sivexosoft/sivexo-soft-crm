@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Businesses | Sivexo Soft CRM</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <style>
+    .businesses-main { margin-left:250px; padding:30px; min-height:100vh; }
+    .businesses-header { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:24px; }
+    .businesses-header h1 { margin:0 0 6px; color:var(--text); font-size:28px; }
+    .businesses-header p { margin:0; color:var(--muted); }
+    .business-toolbar { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+    .business-toolbar input,.business-toolbar select,.business-form input,.business-form select,.business-form textarea {
+      width:100%; min-width:0; box-sizing:border-box; padding:12px; border:1px solid var(--border);
+      border-radius:9px; background:var(--surface-2); color:var(--text); font:inherit;
+    }
+    .business-toolbar input:focus,.business-toolbar select:focus,.business-form input:focus,.business-form select:focus,.business-form textarea:focus {
+      outline:1px solid var(--purple);
+    }
+    .business-card { background:var(--surface); border:1px solid var(--border); border-radius:15px; padding:20px; margin-bottom:20px; }
+    .business-table-wrap { overflow-x:auto; }
+    .business-table { width:100%; border-collapse:collapse; text-align:left; }
+    .business-table th,.business-table td { padding:13px 12px; border-bottom:1px solid var(--border); color:var(--text); font-size:13px; vertical-align:middle; }
+    .business-table th { color:var(--muted); font-size:12px; white-space:nowrap; }
+    .business-table tr:last-child td { border-bottom:0; }
+    .business-table a { color:var(--purple-light); text-decoration:none; }
+    .business-table a:hover { text-decoration:underline; }
+    .business-action { padding:7px 10px; margin:2px; border:1px solid var(--border); border-radius:7px; background:var(--surface-2); color:var(--text); cursor:pointer; }
+    .business-action:hover { border-color:var(--purple); }
+    .business-action.danger { color:#ff9aaa; }
+    .business-stage { min-width:145px; padding:7px; background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:7px; }
+    .business-count { color:var(--muted); font-size:13px; margin-bottom:12px; }
+    .business-message { display:none; padding:12px; margin-bottom:16px; border-radius:9px; overflow-wrap:anywhere; }
+    .business-message.show { display:block; }
+    .business-message.error { color:#ff9aaa; background:rgba(255,107,131,.1); }
+    .business-message.success { color:var(--success); background:rgba(67,217,163,.08); }
+    .business-modal { display:none; position:fixed; inset:0; z-index:1000; padding:20px; background:rgba(0,0,0,.75); overflow-y:auto; }
+    .business-modal.open { display:flex; align-items:flex-start; justify-content:center; }
+    .business-modal-card { width:100%; max-width:650px; margin:auto; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; }
+    .business-modal-card h2 { color:var(--text); margin-top:0; }
+    .business-form { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+    .business-form label { display:block; color:var(--muted); font-size:12px; }
+    .business-form label input,.business-form label select,.business-form label textarea { margin-top:7px; }
+    .business-form .full { grid-column:1/-1; }
+    .business-modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; flex-wrap:wrap; }
+    .business-primary { border:0; border-radius:9px; background:var(--purple); color:white; padding:11px 16px; font-weight:600; cursor:pointer; }
+    .business-primary:disabled { opacity:.6; cursor:wait; }
+    .business-secondary { border:1px solid var(--border); border-radius:9px; background:var(--surface-2); color:var(--text); padding:11px 16px; cursor:pointer; }
+    @media(max-width:1100px) { .businesses-main { margin-left:0; padding:22px; } .business-toolbar { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:600px) { .businesses-main { padding:15px; } .business-toolbar,.business-form { grid-template-columns:1fr; } .business-form .full { grid-column:auto; } .business-card { padding:13px; } }
+  </style>
+</head>
+<body>
+  <main class="businesses-main">
+    <header class="businesses-header">
+      <div>
+        <h1>Businesses</h1>
+        <p>Manage, search, and organize your sales leads.</p>
+      </div>
+      <div>
+        <a class="business-secondary" href="dashboard.html">Dashboard</a>
+        <button id="addBusinessButton" class="business-primary" type="button">+ Add Business</button>
+        <button id="logoutButton" class="business-secondary" type="button">Log out</button>
+      </div>
+    </header>
+
+    <div id="businessMessage" class="business-message" role="status" aria-live="polite"></div>
+
+    <section class="business-card">
+      <div class="business-toolbar">
+        <input id="searchBusinesses" type="search" placeholder="Search businesses, contacts, email..." aria-label="Search businesses">
+        <select id="filterCountry" aria-label="Filter by country">
+          <option value="">All countries</option>
+        </select>
+        <select id="filterCategory" aria-label="Filter by category">
+          <option value="">All categories</option>
+        </select>
+        <select id="filterStage" aria-label="Filter by stage">
+          <option value="">All stages</option>
+          <option value="new">New Lead</option>
+          <option value="first_message_sent">First Message Sent</option>
+          <option value="follow_up">Follow-up</option>
+          <option value="call_done">Call Done</option>
+          <option value="interested">Interested</option>
+          <option value="not_interested">Not Interested</option>
+          <option value="future_opportunity">Future Opportunity</option>
+          <option value="proposal_sent">Proposal Sent</option>
+          <option value="won">Won</option>
+          <option value="lost">Lost</option>
+        </select>
+      </div>
+      <div class="business-count" id="businessCount">Loading businesses...</div>
+      <div class="business-table-wrap">
+        <table class="business-table">
+          <thead>
+            <tr>
+              <th>Business</th>
+              <th>Contact</th>
+              <th>Country</th>
+              <th>Category</th>
+              <th>Stage</th>
+              <th>Next Follow-up</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="businessesTableBody">
+            <tr><td colspan="7">Loading businesses...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="business-modal" id="businessModal" role="dialog" aria-modal="true" aria-labelledby="businessModalTitle">
+    <div class="business-modal-card">
+      <h2 id="businessModalTitle">Add Business</h2>
+      <div id="formMessage" class="business-message" role="alert"></div>
+      <form id="businessForm" class="business-form">
+        <input type="hidden" id="businessId">
+        <label>Business name *
+          <input id="businessName" required maxlength="200">
+        </label>
+        <label>Contact person
+          <input id="businessContact" maxlength="200">
+        </label>
+        <label>Second contact
+          <input id="businessContact2" maxlength="200">
+        </label>
+        <label>Email
+          <input id="businessEmail" type="email" maxlength="254">
+        </label>
+        <label>Website URL
+          <input id="businessWebsite" type="url" placeholder="https://example.com" maxlength="500">
+        </label>
+        <label>Country
+          <input id="businessCountry" maxlength="100">
+        </label>
+        <label>Category
+          <input id="businessCategory" maxlength="100" placeholder="e.g. Car Rental">
+        </label>
+        <label>Sales stage
+          <select id="businessStage">
+            <option value="new">New Lead</option>
+            <option value="first_message_sent">First Message Sent</option>
+            <option value="follow_up">Follow-up</option>
+            <option value="call_done">Call Done</option>
+            <option value="interested">Interested</option>
+            <option value="not_interested">Not Interested</option>
+            <option value="future_opportunity">Future Opportunity</option>
+            <option value="proposal_sent">Proposal Sent</option>
+            <option value="won">Won</option>
+            <option value="lost">Lost</option>
+          </select>
+        </label>
+        <label>Next follow-up
+          <input id="businessFollowUp" type="datetime-local">
+        </label>
+        <label>Lead source
+          <input id="businessSource" maxlength="150" placeholder="e.g. Google, referral">
+        </label>
+        <label class="full">Address
+          <input id="businessAddress" maxlength="500">
+        </label>
+        <label class="full">Details / notes
+          <textarea id="businessDetails" rows="4" maxlength="5000"></textarea>
+        </label>
+        <div class="business-modal-actions full">
+          <button type="button" id="cancelBusinessButton" class="business-secondary">Cancel</button>
+          <button type="submit" id="saveBusinessButton" class="business-primary">Save Business</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/businesses.js"></script>
+</body>
+</html>
