@@ -1,7 +1,7 @@
 
 import { supabase, requireSupabase } from "./supabase.js";
 
-const byId = (id) => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
 
 const STAGES = {
   new: "New Lead",
@@ -16,186 +16,367 @@ const STAGES = {
   lost: "Lost"
 };
 
+const PIPELINE = [
+  { stage: "new", countId: "pipelineNew", color: "purple" },
+  {
+    stage: "first_message_sent",
+    countId: "pipelineMessage",
+    color: "blue"
+  },
+  { stage: "follow_up", countId: "pipelineFollowUp", color: "orange" },
+  { stage: "interested", countId: "pipelineInterested", color: "pink" },
+  { stage: "won", countId: "pipelineWon", color: "green" }
+];
+
+let currentUser = null;
+let activeLeads = [];
+let searchDebounce = null;
+
+function setText(id, value) {
+  const element = $(id);
+  if (element) element.textContent = String(value);
+}
+
 function showMessage(message, type = "error") {
-  const element = byId("dashboardMessage");
+  const element = $("dashboardMessage");
   if (!element) return;
 
   element.textContent = message;
   element.className = `dashboard-message show ${type}`;
 }
 
+function clearMessage() {
+  const element = $("dashboardMessage");
+  if (!element) return;
+
+  element.textContent = "";
+  element.className = "dashboard-message";
+}
+
 function formatDate(value) {
-  if (!value) return "—";
+  if (!value) return "Not scheduled";
 
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "—";
+  if (Number.isNaN(date.getTime())) return "Invalid date";
 
-  return date.toLocaleDateString(undefined, {
+  return new Intl.DateTimeFormat(undefined, {
     day: "numeric",
     month: "short",
-    year: "numeric"
-  });
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
 }
 
-function setText(id, value) {
-  const element = byId(id);
-  if (element) element.textContent = String(value);
+function stageLabel(stage) {
+  return STAGES[stage] || stage || "New Lead";
 }
 
-function countStage(leads, stage) {
-  return leads.filter((lead) => lead.stage === stage).length;
+function stageClass(stage) {
+  return `stage-badge stage-${STAGES[stage] ? stage : "new"}`;
+}
+
+function makeCell(text) {
+  const cell = document.createElement("td");
+  cell.textContent = text || "—";
+  return cell;
+}
+
+function makeStageBadge(stage) {
+  const badge = document.createElement("span");
+  badge.className = stageClass(stage);
+  badge.textContent = stageLabel(stage);
+  return badge;
+}
+
+function makeViewLink(lead) {
+  const link = document.createElement("a");
+  link.href = `businesses.html?lead=${encodeURIComponent(lead.id)}`;
+  link.textContent = "View";
+  link.setAttribute("aria-label", `View ${lead.business_name || "business"}`);
+  return link;
+}
+
+function isDue(lead, now) {
+  if (!lead.next_follow_up_at) return false;
+
+  const followUpTime = new Date(lead.next_follow_up_at).getTime();
+  return Number.isFinite(followUpTime) && followUpTime <= now;
+}
+
+function updatePipeline(leads) {
+  const total = leads.length;
+
+  for (const item of PIPELINE) {
+    const count = leads.filter((lead) => lead.stage === item.stage).length;
+
+    setText(item.countId, count);
+
+    const countElement = $(item.countId);
+    if (!countElement) continue;
+
+    // Update the progress bar if this item has one in the HTML.
+    const card = countElement.closest(".pipeline-item");
+    if (!card) continue;
+
+    const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+    const percentElement = card.querySelector(".pipeline-percent");
+    const progressBar = card.querySelector(".pipeline-progress span");
+
+    if (percentElement) {
+      percentElement.textContent = `${percent}%`;
+    }
+
+    if (progressBar) {
+      progressBar.style.width = `${percent}%`;
+    }
+  }
 }
 
 function renderFollowUps(leads) {
-  const table = byId("followUpsTable");
+  const table = $("followUpsTable");
   if (!table) return;
 
   table.replaceChildren();
 
-  if (leads.length === 0) {
+  const scheduled = leads
+    .filter((lead) => lead.next_follow_up_at)
+    .sort(
+      (a, b) =>
+        new Date(a.next_follow_up_at).getTime() -
+        new Date(b.next_follow_up_at).getTime()
+    )
+    .slice(0, 8);
+
+  if (scheduled.length === 0) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
 
-    cell.colSpan = 4;
-    cell.className = "dashboard-empty";
-    cell.textContent = "No follow-ups scheduled yet.";
+    cell.colSpan = 5;
+    cell.className = "empty-state";
+    cell.textContent =
+      "No follow-ups scheduled yet. Add a follow-up to a lead to see it here.";
 
     row.appendChild(cell);
     table.appendChild(row);
     return;
   }
 
-  const now = new Date();
-
-  for (const lead of leads) {
+  for (const lead of scheduled) {
     const row = document.createElement("tr");
-    const businessCell = document.createElement("td");
-    const countryCell = document.createElement("td");
-    const dateCell = document.createElement("td");
+
+    row.appendChild(makeCell(lead.business_name));
+    row.appendChild(makeCell(lead.country || "—"));
+    row.appendChild(makeCell(formatDate(lead.next_follow_up_at)));
+
     const stageCell = document.createElement("td");
+    stageCell.appendChild(makeStageBadge(lead.stage));
+    row.appendChild(stageCell);
 
-    const link = document.createElement("a");
-    link.href = `businesses.html?lead=${encodeURIComponent(lead.id)}`;
-    link.textContent = lead.business_name || "Unnamed business";
-    businessCell.appendChild(link);
+    const actionCell = document.createElement("td");
+    actionCell.appendChild(makeViewLink(lead));
+    row.appendChild(actionCell);
 
-    countryCell.textContent = lead.country || "—";
-    dateCell.textContent = formatDate(lead.next_follow_up_at);
-    stageCell.textContent = STAGES[lead.stage] || lead.stage || "—";
-
-    if (new Date(lead.next_follow_up_at) < now) {
-      dateCell.style.color = "#ff9aaa";
-    }
-
-    row.append(businessCell, countryCell, dateCell, stageCell);
     table.appendChild(row);
   }
 }
 
+function updateDashboard(leads, messageCount) {
+  const now = Date.now();
+
+  setText("totalLeads", leads.length);
+  setText(
+    "newLeads",
+    leads.filter((lead) => lead.stage === "new").length
+  );
+  setText("messagesSent", messageCount);
+  setText(
+    "interestedLeads",
+    leads.filter((lead) => lead.stage === "interested").length
+  );
+  setText("followUpsDue", leads.filter((lead) => isDue(lead, now)).length);
+  setText("wonLeads", leads.filter((lead) => lead.stage === "won").length);
+
+  updatePipeline(leads);
+  renderFollowUps(leads);
+}
+
 async function loadDashboard() {
+  clearMessage();
+
+  const client = requireSupabase();
+
+  if (!client) {
+    showMessage(
+      "Supabase is not configured. Check the URL and publishable key in assets/js/config.js."
+    );
+    return;
+  }
+
+  const { data: sessionData, error: sessionError } =
+    await client.auth.getSession();
+
+  if (sessionError) {
+    showMessage(`Could not check your session: ${sessionError.message}`);
+    return;
+  }
+
+  const session = sessionData?.session;
+
+  if (!session) {
+    window.location.replace("index.html");
+    return;
+  }
+
+  currentUser = session.user;
+
+  const profileName =
+    currentUser.user_metadata?.full_name ||
+    currentUser.user_metadata?.name ||
+    currentUser.email?.split("@")[0] ||
+    "User";
+
+  const nameElement = $("userName");
+  if (nameElement) {
+    nameElement.textContent = `Hello, ${profileName}`;
+  }
+
+  const [leadsResult, activitiesResult] = await Promise.all([
+    client
+      .from("leads")
+      .select(
+        "id, business_name, country, stage, next_follow_up_at, created_at"
+      )
+      .eq("user_id", currentUser.id)
+      .eq("is_archived", false)
+      .order("created_at", { ascending: false }),
+
+    client
+      .from("activities")
+      .select("lead_id")
+      .eq("user_id", currentUser.id)
+      .eq("activity_type", "first_message_sent")
+  ]);
+
+  if (leadsResult.error) {
+    showMessage(`Could not load leads: ${leadsResult.error.message}`);
+    return;
+  }
+
+  if (activitiesResult.error) {
+    console.warn(
+      "Could not load message activity count:",
+      activitiesResult.error.message
+    );
+  }
+
+  activeLeads = leadsResult.data || [];
+
+  // Count distinct leads with a recorded first-message activity.
+  const messageCount = activitiesResult.error
+    ? 0
+    : new Set(
+        (activitiesResult.data || []).map((activity) => activity.lead_id)
+      ).size;
+
+  updateDashboard(activeLeads, messageCount);
+}
+
+async function logout() {
+  const button = $("logoutButton");
+  if (button) button.disabled = true;
+
   try {
-    if (!requireSupabase()) return;
+    const client = requireSupabase();
 
-    const { data: sessionData, error: sessionError } =
-      await supabase.auth.getSession();
-
-    if (sessionError) throw sessionError;
-
-    const session = sessionData?.session;
-
-    if (!session) {
+    if (!client) {
       window.location.replace("index.html");
       return;
     }
 
-    const userId = session.user.id;
+    const { error } = await client.auth.signOut();
 
-    const { data: leads, error: leadsError } = await supabase
-      .from("leads")
-      .select(
-        "id, business_name, country, stage, next_follow_up_at, is_archived, created_at"
-      )
-      .eq("user_id", userId)
-      .eq("is_archived", false)
-      .order("created_at", { ascending: false });
+    if (error) {
+      showMessage(`Could not log out: ${error.message}`);
+      if (button) button.disabled = false;
+      return;
+    }
 
-    if (leadsError) throw leadsError;
-
-    const activeLeads = leads || [];
-    const now = new Date();
-
-    setText("totalLeads", activeLeads.length);
-    setText("newLeads", countStage(activeLeads, "new"));
-    setText("interestedLeads", countStage(activeLeads, "interested"));
-    setText("wonLeads", countStage(activeLeads, "won"));
-
-    const dueFollowUps = activeLeads.filter(
-      (lead) =>
-        lead.next_follow_up_at &&
-        new Date(lead.next_follow_up_at) <= now
-    );
-
-    setText("followUpsDue", dueFollowUps.length);
-
-    // Count actual first-message activities, rather than guessing from stages.
-    const { data: messageActivities, error: activityError } =
-      await supabase
-        .from("activities")
-        .select("lead_id")
-        .eq("user_id", userId)
-        .eq("activity_type", "first_message_sent");
-
-    if (activityError) throw activityError;
-
-    const uniqueMessagedLeads = new Set(
-      (messageActivities || []).map((activity) => activity.lead_id)
-    );
-
-    setText("messagesSent", uniqueMessagedLeads.size);
-
-    setText("pipelineNew", countStage(activeLeads, "new"));
-    setText(
-      "pipelineMessage",
-      countStage(activeLeads, "first_message_sent")
-    );
-    setText("pipelineFollowUp", countStage(activeLeads, "follow_up"));
-    setText("pipelineInterested", countStage(activeLeads, "interested"));
-    setText("pipelineWon", countStage(activeLeads, "won"));
-
-    const scheduledFollowUps = activeLeads
-      .filter((lead) => lead.next_follow_up_at)
-      .sort(
-        (a, b) =>
-          new Date(a.next_follow_up_at) - new Date(b.next_follow_up_at)
-      )
-      .slice(0, 8);
-
-    renderFollowUps(scheduledFollowUps);
+    window.location.replace("index.html");
   } catch (error) {
-    console.error("Dashboard loading error:", error);
-    showMessage(
-      error?.message || "Could not load dashboard data. Please refresh."
-    );
+    showMessage(error.message || "An unexpected logout error occurred.");
+    if (button) button.disabled = false;
   }
 }
 
-const logoutButton = byId("logoutButton");
+function setupGlobalSearch() {
+  const searchInput = $("globalSearch");
+  if (!searchInput) return;
 
-if (logoutButton) {
-  logoutButton.addEventListener("click", async () => {
-    logoutButton.disabled = true;
+  searchInput.addEventListener("input", () => {
+    clearTimeout(searchDebounce);
 
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+    searchDebounce = setTimeout(() => {
+      const query = searchInput.value.trim();
 
-      window.location.replace("index.html");
-    } catch (error) {
-      console.error("Logout error:", error);
-      showMessage("Logout failed. Please try again.");
-      logoutButton.disabled = false;
+      if (!query) {
+        window.location.href = "businesses.html";
+        return;
+      }
+
+      window.location.href =
+        `businesses.html?q=${encodeURIComponent(query)}`;
+    }, 350);
+  });
+
+  searchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      clearTimeout(searchDebounce);
+      window.location.href =
+        `businesses.html?q=${encodeURIComponent(searchInput.value.trim())}`;
     }
   });
 }
 
-loadDashboard();
+function setupNotifications() {
+  const button = $("notificationButton");
+  if (!button) return;
+
+  button.addEventListener("click", () => {
+    window.location.href = "follow-ups.html";
+  });
+}
+
+function setupAuthListener() {
+  const client = supabase;
+  if (!client) return;
+
+  client.auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_OUT") {
+      window.location.replace("index.html");
+    }
+  });
+}
+
+async function initDashboard() {
+  const logoutButton = $("logoutButton");
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", logout);
+  }
+
+  setupGlobalSearch();
+  setupNotifications();
+  setupAuthListener();
+
+  try {
+    await loadDashboard();
+  } catch (error) {
+    console.error("Dashboard initialization failed:", error);
+    showMessage(
+      error.message || "Unable to load the dashboard. Please refresh the page."
+    );
+  }
+}
+
+initDashboard();
