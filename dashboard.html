@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#08070c">
+  <meta name="theme-color" content="#080a18">
   <title>Dashboard | Sivexo Soft CRM</title>
 
   <link rel="stylesheet" href="assets/css/style.css">
@@ -12,27 +12,52 @@
 
   <script type="module" src="assets/js/dashboard.js"></script>
 </head>
+
 <body class="crm-page">
 
+  <!-- Sidebar -->
   <aside class="sidebar">
-    <a class="sidebar-brand" href="dashboard.html">
-      <span class="brand-mark">S</span>
-      <span class="brand-name">SIVEXO <small>SOFT CRM</small></span>
+    <a class="sidebar-brand" href="dashboard.html" aria-label="Sivexo Soft CRM home">
+      <img src="assets/images/logo.png" alt="Sivexo Soft logo">
+      <span class="brand-text">
+        <strong>SIVEXO</strong>
+        <small>SOFT CRM</small>
+      </span>
     </a>
 
     <p class="nav-label">WORKSPACE</p>
 
-    <nav class="sidebar-nav">
-      <a class="nav-link active" href="dashboard.html"><span>▦</span> Dashboard</a>
-      <a class="nav-link" href="businesses.html"><span>▤</span> All Businesses</a>
-      <a class="nav-link" href="add-business.html"><span>＋</span> Add Business</a>
-      <a class="nav-link" href="bulk-add.html"><span>⇧</span> Bulk Add</a>
-      <a class="nav-link" href="follow-ups.html"><span>◷</span> Follow-ups</a>
-      <a class="nav-link" href="messages.html"><span>✉</span> Message Templates</a>
-      <a class="nav-link" href="proposals.html"><span>◇</span> Proposals & Payments</a>
-      <a class="nav-link" href="reports.html"><span>▥</span> Sales Reports</a>
-      <a class="nav-link" href="archive.html"><span>▣</span> Archive</a>
-      <a class="nav-link" href="settings.html"><span>⚙</span> Settings</a>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <a class="nav-link active" href="dashboard.html">
+        <span class="nav-icon">▦</span><span>Dashboard</span>
+      </a>
+      <a class="nav-link" href="businesses.html">
+        <span class="nav-icon">▤</span><span>All Businesses</span>
+      </a>
+      <a class="nav-link" href="businesses.html?add=1">
+        <span class="nav-icon">＋</span><span>Add Business</span>
+      </a>
+      <a class="nav-link" href="bulk-add.html">
+        <span class="nav-icon">⇧</span><span>Bulk Add</span>
+      </a>
+      <a class="nav-link" href="follow-ups.html">
+        <span class="nav-icon">◷</span><span>Follow-ups</span>
+      </a>
+      <a class="nav-link" href="messages.html">
+        <span class="nav-icon">✉</span><span>Message Templates</span>
+      </a>
+      <a class="nav-link" href="proposals.html">
+        <span class="nav-icon">◇</span><span>Proposals &amp; Payments</span>
+      </a>
+      <a class="nav-link" href="reports.html">
+        <span class="nav-icon">▥</span><span>Sales Reports</span>
+      </a>
+      <a class="nav-link" href="archive.html">
+        <span class="nav-icon">▣</span><span>Archive</span>
+      </a>
+      <a class="nav-link" href="settings.html">
+        <span class="nav-icon">⚙</span><span>Settings</span>
+      </a>
     </nav>
 
     <div class="sidebar-bottom">
@@ -40,149 +65,234 @@
         <span class="status-dot"></span>
         <span>Personal workspace</span>
       </div>
-      <button id="logoutButton" class="btn logout-btn" type="button">
-        Log out
+      <button id="logoutButton" class="logout-btn" type="button">
+        <span>⇥</span> Log out
       </button>
     </div>
   </aside>
 
+  <!-- Main workspace -->
   <main class="main-content">
-    <header class="topbar">
-      <div class="page-heading">
-        <p class="eyebrow">YOUR SALES OVERVIEW</p>
-        <h1>Dashboard</h1>
-        <p class="muted">Track your prospects and keep every opportunity moving.</p>
-      </div>
 
-      <a class="btn btn-primary" href="businesses.html?add=1">
-        ＋ Add new lead
-      </a>
+    <!-- Top navigation -->
+    <header class="topbar">
+      <label class="global-search">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input
+          id="globalSearch"
+          type="search"
+          placeholder="Search businesses, contacts, email..."
+          aria-label="Search businesses, contacts, and email"
+        >
+      </label>
+
+      <div class="topbar-actions">
+        <button class="notification-button" type="button" aria-label="Notifications">
+          ♧
+          <span class="notification-dot"></span>
+        </button>
+
+        <div class="topbar-divider"></div>
+
+        <div class="user-profile">
+          <div class="avatar">S</div>
+          <span>Sivexo Workspace</span>
+          <span class="profile-chevron">⌄</span>
+        </div>
+      </div>
     </header>
 
-    <div id="dashboardMessage" class="dashboard-message" role="status" aria-live="polite"></div>
+    <div class="dashboard-content">
 
-    <section class="stats-grid" aria-label="Lead statistics">
-      <article class="stat-card">
-        <div class="stat-top">
-          <span class="stat-label">Total leads</span>
-          <span class="stat-icon purple">▤</span>
-        </div>
-        <strong class="stat-value" id="totalLeads">—</strong>
-        <span class="stat-note">All active businesses</span>
-      </article>
-
-      <article class="stat-card">
-        <div class="stat-top">
-          <span class="stat-label">New leads</span>
-          <span class="stat-icon blue">＋</span>
-        </div>
-        <strong class="stat-value" id="newLeads">—</strong>
-        <span class="stat-note">Waiting for outreach</span>
-      </article>
-
-      <article class="stat-card">
-        <div class="stat-top">
-          <span class="stat-label">Messages sent</span>
-          <span class="stat-icon green">✉</span>
-        </div>
-        <strong class="stat-value" id="messagesSent">—</strong>
-        <span class="stat-note">First messages recorded</span>
-      </article>
-
-      <article class="stat-card">
-        <div class="stat-top">
-          <span class="stat-label">Interested</span>
-          <span class="stat-icon pink">♡</span>
-        </div>
-        <strong class="stat-value" id="interestedLeads">—</strong>
-        <span class="stat-note">Potential opportunities</span>
-      </article>
-
-      <article class="stat-card">
-        <div class="stat-top">
-          <span class="stat-label">Follow-ups due</span>
-          <span class="stat-icon orange">◷</span>
-        </div>
-        <strong class="stat-value" id="followUpsDue">—</strong>
-        <span class="stat-note">Due now or overdue</span>
-      </article>
-
-      <article class="stat-card">
-        <div class="stat-top">
-          <span class="stat-label">Deals won</span>
-          <span class="stat-icon green">✓</span>
-        </div>
-        <strong class="stat-value" id="wonLeads">—</strong>
-        <span class="stat-note">Successfully converted</span>
-      </article>
-    </section>
-
-    <section class="panel">
-      <div class="panel-heading">
+      <!-- Page heading -->
+      <section class="page-header">
         <div>
-          <h2>Sales pipeline</h2>
-          <p class="muted">See where your leads stand.</p>
+          <p class="eyebrow">YOUR SALES OVERVIEW</p>
+          <h1>Dashboard</h1>
+          <p class="page-subtitle">
+            Track your prospects and keep every opportunity moving.
+          </p>
         </div>
-        <a class="panel-link" href="businesses.html">View all leads →</a>
-      </div>
 
-      <div class="pipeline-grid">
-        <a class="pipeline-item" href="businesses.html?stage=new">
-          <span class="pipeline-heading"><span class="pipeline-dot purple-dot"></span>New</span>
-          <strong id="pipelineNew">—</strong>
+        <a class="primary-button" href="businesses.html?add=1">
+          <span>＋</span> Add new lead
         </a>
+      </section>
 
-        <a class="pipeline-item" href="businesses.html?stage=first_message_sent">
-          <span class="pipeline-heading"><span class="pipeline-dot blue-dot"></span>First message</span>
-          <strong id="pipelineMessage">—</strong>
-        </a>
+      <div id="dashboardMessage" class="dashboard-message" role="status" aria-live="polite"></div>
 
-        <a class="pipeline-item" href="businesses.html?stage=follow_up">
-          <span class="pipeline-heading"><span class="pipeline-dot orange-dot"></span>Follow-up</span>
-          <strong id="pipelineFollowUp">—</strong>
-        </a>
+      <!-- Statistics -->
+      <section class="stats-grid" aria-label="Lead statistics">
 
-        <a class="pipeline-item" href="businesses.html?stage=interested">
-          <span class="pipeline-heading"><span class="pipeline-dot pink-dot"></span>Interested</span>
-          <strong id="pipelineInterested">—</strong>
-        </a>
+        <article class="stat-card stat-purple">
+          <div class="stat-icon">♟</div>
+          <div class="stat-info">
+            <div class="stat-heading">
+              <span class="stat-label">Total leads</span>
+            </div>
+            <strong class="stat-value" id="totalLeads">—</strong>
+            <span class="stat-note">All active businesses</span>
+          </div>
+        </article>
 
-        <a class="pipeline-item" href="businesses.html?stage=won">
-          <span class="pipeline-heading"><span class="pipeline-dot green-dot"></span>Won</span>
-          <strong id="pipelineWon">—</strong>
-        </a>
-      </div>
-    </section>
+        <article class="stat-card stat-blue">
+          <div class="stat-icon">⊕</div>
+          <div class="stat-info">
+            <div class="stat-heading">
+              <span class="stat-label">New leads</span>
+            </div>
+            <strong class="stat-value" id="newLeads">—</strong>
+            <span class="stat-note">Waiting for outreach</span>
+          </div>
+        </article>
 
-    <section class="panel">
-      <div class="panel-heading">
-        <div>
-          <h2>Upcoming follow-ups</h2>
-          <p class="muted">Your next actions, in one place.</p>
+        <article class="stat-card stat-teal">
+          <div class="stat-icon">✉</div>
+          <div class="stat-info">
+            <div class="stat-heading">
+              <span class="stat-label">Messages sent</span>
+            </div>
+            <strong class="stat-value" id="messagesSent">—</strong>
+            <span class="stat-note">First messages recorded</span>
+          </div>
+        </article>
+
+        <article class="stat-card stat-pink">
+          <div class="stat-icon">♥</div>
+          <div class="stat-info">
+            <div class="stat-heading">
+              <span class="stat-label">Interested</span>
+            </div>
+            <strong class="stat-value" id="interestedLeads">—</strong>
+            <span class="stat-note">Potential opportunities</span>
+          </div>
+        </article>
+
+        <article class="stat-card stat-orange">
+          <div class="stat-icon">◷</div>
+          <div class="stat-info">
+            <div class="stat-heading">
+              <span class="stat-label">Follow-ups due</span>
+            </div>
+            <strong class="stat-value" id="followUpsDue">—</strong>
+            <span class="stat-note">Due now or overdue</span>
+          </div>
+        </article>
+
+        <article class="stat-card stat-green">
+          <div class="stat-icon">✓</div>
+          <div class="stat-info">
+            <div class="stat-heading">
+              <span class="stat-label">Deals won</span>
+            </div>
+            <strong class="stat-value" id="wonLeads">—</strong>
+            <span class="stat-note">Successfully converted</span>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- Sales pipeline -->
+      <section class="panel pipeline-panel">
+        <div class="panel-heading">
+          <div class="panel-title-group">
+            <div class="panel-heading-icon">♙</div>
+            <div>
+              <h2>Sales pipeline</h2>
+              <p>See where your leads stand.</p>
+            </div>
+          </div>
+          <a class="panel-link" href="businesses.html">View all leads <span>→</span></a>
         </div>
-        <a class="panel-link" href="follow-ups.html">View reminders →</a>
-      </div>
 
-      <div class="table-wrap">
-        <table class="dashboard-table">
-          <thead>
-            <tr>
-              <th>Business</th>
-              <th>Country</th>
-              <th>Next follow-up</th>
-              <th>Stage</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="followUpsTable">
-            <tr>
-              <td colspan="5" class="empty-state">Connecting to your CRM…</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+        <div class="pipeline-grid">
+          <a class="pipeline-item pipeline-purple" href="businesses.html?stage=new">
+            <div class="pipeline-label"><span class="pipeline-dot"></span>New</div>
+            <div class="pipeline-bottom">
+              <strong id="pipelineNew">—</strong>
+              <span class="pipeline-percent" id="pipelineNewPercent"></span>
+            </div>
+            <div class="pipeline-progress"><span id="pipelineNewBar"></span></div>
+          </a>
 
+          <a class="pipeline-item pipeline-blue" href="businesses.html?stage=first_message_sent">
+            <div class="pipeline-label"><span class="pipeline-dot"></span>First message</div>
+            <div class="pipeline-bottom">
+              <strong id="pipelineMessage">—</strong>
+              <span class="pipeline-percent" id="pipelineMessagePercent"></span>
+            </div>
+            <div class="pipeline-progress"><span id="pipelineMessageBar"></span></div>
+          </a>
+
+          <a class="pipeline-item pipeline-orange" href="businesses.html?stage=follow_up">
+            <div class="pipeline-label"><span class="pipeline-dot"></span>Follow-up</div>
+            <div class="pipeline-bottom">
+              <strong id="pipelineFollowUp">—</strong>
+              <span class="pipeline-percent" id="pipelineFollowUpPercent"></span>
+            </div>
+            <div class="pipeline-progress"><span id="pipelineFollowUpBar"></span></div>
+          </a>
+
+          <a class="pipeline-item pipeline-pink" href="businesses.html?stage=interested">
+            <div class="pipeline-label"><span class="pipeline-dot"></span>Interested</div>
+            <div class="pipeline-bottom">
+              <strong id="pipelineInterested">—</strong>
+              <span class="pipeline-percent" id="pipelineInterestedPercent"></span>
+            </div>
+            <div class="pipeline-progress"><span id="pipelineInterestedBar"></span></div>
+          </a>
+
+          <a class="pipeline-item pipeline-green" href="businesses.html?stage=won">
+            <div class="pipeline-label"><span class="pipeline-dot"></span>Won</div>
+            <div class="pipeline-bottom">
+              <strong id="pipelineWon">—</strong>
+              <span class="pipeline-percent" id="pipelineWonPercent"></span>
+            </div>
+            <div class="pipeline-progress"><span id="pipelineWonBar"></span></div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Follow-ups -->
+      <section class="panel followups-panel">
+        <div class="panel-heading">
+          <div class="panel-title-group">
+            <div class="panel-heading-icon calendar-icon">▦</div>
+            <div>
+              <h2>Upcoming follow-ups</h2>
+              <p>Your next actions, in one place.</p>
+            </div>
+          </div>
+          <a class="panel-link" href="follow-ups.html">View reminders <span>→</span></a>
+        </div>
+
+        <div class="table-wrap">
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th>Business</th>
+                <th>Country</th>
+                <th>Next follow-up</th>
+                <th>Stage</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="followUpsTable">
+              <tr>
+                <td colspan="5" class="empty-state">Connecting to your CRM…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="dashboard-footer">
+        <span>Sivexo Soft CRM</span>
+        <span>Manage relationships. Grow your business.</span>
+      </footer>
+
+    </div>
   </main>
+
 </body>
 </html>
