@@ -2,85 +2,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08070c">
   <title>Dashboard | Sivexo Soft CRM</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="assets/css/dashboard.css" />
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+
   <script type="module" src="assets/js/dashboard.js"></script>
 </head>
 <body class="crm-page">
+
   <aside class="sidebar">
     <a class="sidebar-brand" href="dashboard.html">
-      <img src="assets/images/logo.png" alt="Sivexo Soft" />
-      <span>SIVEXO <small>SOFT CRM</small></span>
+      <span class="brand-mark">S</span>
+      <span class="brand-name">SIVEXO <small>SOFT CRM</small></span>
     </a>
 
     <p class="nav-label">WORKSPACE</p>
+
     <nav class="sidebar-nav">
-      <a class="nav-link active" href="dashboard.html">▦ Dashboard</a>
-      <a class="nav-link" href="businesses.html">▤ All Businesses</a>
-      <a class="nav-link" href="add-business.html">＋ Add Business</a>
-      <a class="nav-link" href="bulk-add.html">⇧ Bulk Add</a>
-      <a class="nav-link" href="follow-ups.html">◷ Follow-ups</a>
-      <a class="nav-link" href="messages.html">✉ Message Templates</a>
-      <a class="nav-link" href="proposals.html">◇ Proposals & Payments</a>
-      <a class="nav-link" href="reports.html">▥ Sales Reports</a>
-      <a class="nav-link" href="archive.html">▣ Archive</a>
-      <a class="nav-link" href="settings.html">⚙ Settings</a>
+      <a class="nav-link active" href="dashboard.html"><span>▦</span> Dashboard</a>
+      <a class="nav-link" href="businesses.html"><span>▤</span> All Businesses</a>
+      <a class="nav-link" href="add-business.html"><span>＋</span> Add Business</a>
+      <a class="nav-link" href="bulk-add.html"><span>⇧</span> Bulk Add</a>
+      <a class="nav-link" href="follow-ups.html"><span>◷</span> Follow-ups</a>
+      <a class="nav-link" href="messages.html"><span>✉</span> Message Templates</a>
+      <a class="nav-link" href="proposals.html"><span>◇</span> Proposals & Payments</a>
+      <a class="nav-link" href="reports.html"><span>▥</span> Sales Reports</a>
+      <a class="nav-link" href="archive.html"><span>▣</span> Archive</a>
+      <a class="nav-link" href="settings.html"><span>⚙</span> Settings</a>
     </nav>
 
     <div class="sidebar-bottom">
-      <span class="status-dot"></span>
-      <span>Personal workspace</span>
-      <button id="logoutButton" class="btn logout-btn">Log out</button>
+      <div class="workspace-info">
+        <span class="status-dot"></span>
+        <span>Personal workspace</span>
+      </div>
+      <button id="logoutButton" class="btn logout-btn" type="button">
+        Log out
+      </button>
     </div>
   </aside>
 
   <main class="main-content">
     <header class="topbar">
-      <div>
+      <div class="page-heading">
         <p class="eyebrow">YOUR SALES OVERVIEW</p>
         <h1>Dashboard</h1>
         <p class="muted">Track your prospects and keep every opportunity moving.</p>
       </div>
-      <a class="btn btn-primary" href="add-business.html">＋ Add new lead</a>
+
+      <a class="btn btn-primary" href="businesses.html?add=1">
+        ＋ Add new lead
+      </a>
     </header>
+
+    <div id="dashboardMessage" class="dashboard-message" role="status" aria-live="polite"></div>
 
     <section class="stats-grid" aria-label="Lead statistics">
       <article class="stat-card">
-        <span class="stat-label">Total leads</span>
-        <strong id="totalLeads">—</strong>
+        <div class="stat-top">
+          <span class="stat-label">Total leads</span>
+          <span class="stat-icon purple">▤</span>
+        </div>
+        <strong class="stat-value" id="totalLeads">—</strong>
         <span class="stat-note">All active businesses</span>
       </article>
 
       <article class="stat-card">
-        <span class="stat-label">New leads</span>
-        <strong id="newLeads">—</strong>
+        <div class="stat-top">
+          <span class="stat-label">New leads</span>
+          <span class="stat-icon blue">＋</span>
+        </div>
+        <strong class="stat-value" id="newLeads">—</strong>
         <span class="stat-note">Waiting for outreach</span>
       </article>
 
       <article class="stat-card">
-        <span class="stat-label">Messages sent</span>
-        <strong id="messagesSent">—</strong>
+        <div class="stat-top">
+          <span class="stat-label">Messages sent</span>
+          <span class="stat-icon green">✉</span>
+        </div>
+        <strong class="stat-value" id="messagesSent">—</strong>
         <span class="stat-note">First messages recorded</span>
       </article>
 
       <article class="stat-card">
-        <span class="stat-label">Interested</span>
-        <strong id="interestedLeads">—</strong>
+        <div class="stat-top">
+          <span class="stat-label">Interested</span>
+          <span class="stat-icon pink">♡</span>
+        </div>
+        <strong class="stat-value" id="interestedLeads">—</strong>
         <span class="stat-note">Potential opportunities</span>
       </article>
 
       <article class="stat-card">
-        <span class="stat-label">Follow-ups due</span>
-        <strong id="followUpsDue">—</strong>
+        <div class="stat-top">
+          <span class="stat-label">Follow-ups due</span>
+          <span class="stat-icon orange">◷</span>
+        </div>
+        <strong class="stat-value" id="followUpsDue">—</strong>
         <span class="stat-note">Due now or overdue</span>
       </article>
 
       <article class="stat-card">
-        <span class="stat-label">Deals won</span>
-        <strong id="wonLeads">—</strong>
+        <div class="stat-top">
+          <span class="stat-label">Deals won</span>
+          <span class="stat-icon green">✓</span>
+        </div>
+        <strong class="stat-value" id="wonLeads">—</strong>
         <span class="stat-note">Successfully converted</span>
       </article>
     </section>
@@ -91,33 +123,32 @@
           <h2>Sales pipeline</h2>
           <p class="muted">See where your leads stand.</p>
         </div>
-        <a href="businesses.html">View all leads →</a>
+        <a class="panel-link" href="businesses.html">View all leads →</a>
       </div>
 
       <div class="pipeline-grid">
         <a class="pipeline-item" href="businesses.html?stage=new">
-          <span class="pipeline-dot"></span>
-          <span>New</span>
+          <span class="pipeline-heading"><span class="pipeline-dot purple-dot"></span>New</span>
           <strong id="pipelineNew">—</strong>
         </a>
+
         <a class="pipeline-item" href="businesses.html?stage=first_message_sent">
-          <span class="pipeline-dot"></span>
-          <span>First message</span>
+          <span class="pipeline-heading"><span class="pipeline-dot blue-dot"></span>First message</span>
           <strong id="pipelineMessage">—</strong>
         </a>
+
         <a class="pipeline-item" href="businesses.html?stage=follow_up">
-          <span class="pipeline-dot"></span>
-          <span>Follow-up</span>
+          <span class="pipeline-heading"><span class="pipeline-dot orange-dot"></span>Follow-up</span>
           <strong id="pipelineFollowUp">—</strong>
         </a>
+
         <a class="pipeline-item" href="businesses.html?stage=interested">
-          <span class="pipeline-dot"></span>
-          <span>Interested</span>
+          <span class="pipeline-heading"><span class="pipeline-dot pink-dot"></span>Interested</span>
           <strong id="pipelineInterested">—</strong>
         </a>
+
         <a class="pipeline-item" href="businesses.html?stage=won">
-          <span class="pipeline-dot"></span>
-          <span>Won</span>
+          <span class="pipeline-heading"><span class="pipeline-dot green-dot"></span>Won</span>
           <strong id="pipelineWon">—</strong>
         </a>
       </div>
@@ -129,11 +160,11 @@
           <h2>Upcoming follow-ups</h2>
           <p class="muted">Your next actions, in one place.</p>
         </div>
-        <a href="follow-ups.html">View reminders →</a>
+        <a class="panel-link" href="follow-ups.html">View reminders →</a>
       </div>
 
       <div class="table-wrap">
-        <table>
+        <table class="dashboard-table">
           <thead>
             <tr>
               <th>Business</th>
@@ -145,16 +176,13 @@
           </thead>
           <tbody id="followUpsTable">
             <tr>
-              <td colspan="5" class="empty-state">
-                Connecting to your CRM…
-              </td>
+              <td colspan="5" class="empty-state">Connecting to your CRM…</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <p id="dashboardMessage" class="form-message" role="status"></p>
   </main>
 </body>
 </html>
