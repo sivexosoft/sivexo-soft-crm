@@ -17,20 +17,40 @@ const STAGES = {
 };
 
 const PIPELINE = [
-  { stage: "new", countId: "pipelineNew", color: "purple" },
+  {
+    stage: "new",
+    countId: "pipelineNew",
+    percentId: "pipelineNewPercent",
+    barId: "pipelineNewBar"
+  },
   {
     stage: "first_message_sent",
     countId: "pipelineMessage",
-    color: "blue"
+    percentId: "pipelineMessagePercent",
+    barId: "pipelineMessageBar"
   },
-  { stage: "follow_up", countId: "pipelineFollowUp", color: "orange" },
-  { stage: "interested", countId: "pipelineInterested", color: "pink" },
-  { stage: "won", countId: "pipelineWon", color: "green" }
+  {
+    stage: "follow_up",
+    countId: "pipelineFollowUp",
+    percentId: "pipelineFollowUpPercent",
+    barId: "pipelineFollowUpBar"
+  },
+  {
+    stage: "interested",
+    countId: "pipelineInterested",
+    percentId: "pipelineInterestedPercent",
+    barId: "pipelineInterestedBar"
+  },
+  {
+    stage: "won",
+    countId: "pipelineWon",
+    percentId: "pipelineWonPercent",
+    barId: "pipelineWonBar"
+  }
 ];
 
 let currentUser = null;
-let activeLeads = [];
-let searchDebounce = null;
+let searchTimeout = null;
 
 function setText(id, value) {
   const element = $(id);
@@ -57,6 +77,7 @@ function formatDate(value) {
   if (!value) return "Not scheduled";
 
   const date = new Date(value);
+
   if (Number.isNaN(date.getTime())) return "Invalid date";
 
   return new Intl.DateTimeFormat(undefined, {
@@ -72,63 +93,45 @@ function stageLabel(stage) {
   return STAGES[stage] || stage || "New Lead";
 }
 
-function stageClass(stage) {
-  return `stage-badge stage-${STAGES[stage] ? stage : "new"}`;
-}
-
-function makeCell(text) {
+function createCell(value) {
   const cell = document.createElement("td");
-  cell.textContent = text || "—";
+  cell.textContent = value || "—";
   return cell;
 }
 
-function makeStageBadge(stage) {
+function createStageBadge(stage) {
   const badge = document.createElement("span");
-  badge.className = stageClass(stage);
+  badge.className = `stage-badge stage-${STAGES[stage] ? stage : "new"}`;
   badge.textContent = stageLabel(stage);
   return badge;
 }
 
-function makeViewLink(lead) {
-  const link = document.createElement("a");
-  link.href = `businesses.html?lead=${encodeURIComponent(lead.id)}`;
-  link.textContent = "View";
-  link.setAttribute("aria-label", `View ${lead.business_name || "business"}`);
-  return link;
-}
-
-function isDue(lead, now) {
-  if (!lead.next_follow_up_at) return false;
-
-  const followUpTime = new Date(lead.next_follow_up_at).getTime();
-  return Number.isFinite(followUpTime) && followUpTime <= now;
-}
-
-function updatePipeline(leads) {
+function renderPipeline(leads) {
   const total = leads.length;
 
   for (const item of PIPELINE) {
-    const count = leads.filter((lead) => lead.stage === item.stage).length;
+    const count = leads.filter(
+      (lead) => lead.stage === item.stage
+    ).length;
+
+    const percentage =
+      total > 0 ? Math.round((count / total) * 100) : 0;
 
     setText(item.countId, count);
+    setText(item.percentId, `${percentage}%`);
 
-    const countElement = $(item.countId);
-    if (!countElement) continue;
+    const bar = $(item.barId);
 
-    // Update the progress bar if this item has one in the HTML.
-    const card = countElement.closest(".pipeline-item");
-    if (!card) continue;
-
-    const percent = total > 0 ? Math.round((count / total) * 100) : 0;
-    const percentElement = card.querySelector(".pipeline-percent");
-    const progressBar = card.querySelector(".pipeline-progress span");
-
-    if (percentElement) {
-      percentElement.textContent = `${percent}%`;
-    }
-
-    if (progressBar) {
-      progressBar.style.width = `${percent}%`;
+    if (bar) {
+      bar.style.width = `${percentage}%`;
+      bar.setAttribute("role", "progressbar");
+      bar.setAttribute("aria-valuemin", "0");
+      bar.setAttribute("aria-valuemax", "100");
+      bar.setAttribute("aria-valuenow", String(percentage));
+      bar.setAttribute(
+        "aria-label",
+        `${stageLabel(item.stage)}: ${percentage}% of active leads`
+      );
     }
   }
 }
@@ -139,89 +142,139 @@ function renderFollowUps(leads) {
 
   table.replaceChildren();
 
-  const scheduled = leads
+  const scheduledLeads = leads
     .filter((lead) => lead.next_follow_up_at)
     .sort(
       (a, b) =>
         new Date(a.next_follow_up_at).getTime() -
         new Date(b.next_follow_up_at).getTime()
     )
-    .slice(0, 8);
+    .slice(0, 5);
 
-  if (scheduled.length === 0) {
+  if (scheduledLeads.length === 0) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
 
     cell.colSpan = 5;
     cell.className = "empty-state";
     cell.textContent =
-      "No follow-ups scheduled yet. Add a follow-up to a lead to see it here.";
+      "No follow-ups scheduled yet. Set a follow-up date on a lead to see it here.";
 
     row.appendChild(cell);
     table.appendChild(row);
     return;
   }
 
-  for (const lead of scheduled) {
+  for (const lead of scheduledLeads) {
     const row = document.createElement("tr");
 
-    row.appendChild(makeCell(lead.business_name));
-    row.appendChild(makeCell(lead.country || "—"));
-    row.appendChild(makeCell(formatDate(lead.next_follow_up_at)));
+    row.appendChild(createCell(lead.business_name));
+    row.appendChild(createCell(lead.country));
+    row.appendChild(createCell(formatDate(lead.next_follow_up_at)));
 
     const stageCell = document.createElement("td");
-    stageCell.appendChild(makeStageBadge(lead.stage));
+    stageCell.appendChild(createStageBadge(lead.stage));
     row.appendChild(stageCell);
 
     const actionCell = document.createElement("td");
-    actionCell.appendChild(makeViewLink(lead));
+    const viewLink = document.createElement("a");
+
+    viewLink.href =
+      `businesses.html?lead=${encodeURIComponent(lead.id)}`;
+    viewLink.textContent = "View";
+    viewLink.setAttribute(
+      "aria-label",
+      `View ${lead.business_name || "business"}`
+    );
+
+    actionCell.appendChild(viewLink);
     row.appendChild(actionCell);
 
     table.appendChild(row);
   }
 }
 
-function updateDashboard(leads, messageCount) {
+function updateStatistics(leads, messageCount) {
   const now = Date.now();
 
   setText("totalLeads", leads.length);
+
   setText(
     "newLeads",
     leads.filter((lead) => lead.stage === "new").length
   );
+
   setText("messagesSent", messageCount);
+
   setText(
     "interestedLeads",
     leads.filter((lead) => lead.stage === "interested").length
   );
-  setText("followUpsDue", leads.filter((lead) => isDue(lead, now)).length);
-  setText("wonLeads", leads.filter((lead) => lead.stage === "won").length);
 
-  updatePipeline(leads);
+  setText(
+    "followUpsDue",
+    leads.filter((lead) => {
+      if (!lead.next_follow_up_at) return false;
+
+      const followUpTime = new Date(
+        lead.next_follow_up_at
+      ).getTime();
+
+      return Number.isFinite(followUpTime) && followUpTime <= now;
+    }).length
+  );
+
+  setText(
+    "wonLeads",
+    leads.filter((lead) => lead.stage === "won").length
+  );
+
+  renderPipeline(leads);
   renderFollowUps(leads);
 }
 
-async function loadDashboard() {
-  clearMessage();
+function updateProfile(user) {
+  const name =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.email?.split("@")[0] ||
+    "User";
 
+  const profile = document.querySelector(".user-profile");
+  const avatar = document.querySelector(".user-profile .avatar");
+
+  if (profile) {
+    const nameSpan = profile.querySelector("span");
+
+    if (nameSpan) {
+      nameSpan.textContent = `Hello, ${name}`;
+    }
+  }
+
+  if (avatar) {
+    avatar.textContent = name.charAt(0).toUpperCase();
+  }
+}
+
+async function loadDashboard() {
   const client = requireSupabase();
 
   if (!client) {
     showMessage(
-      "Supabase is not configured. Check the URL and publishable key in assets/js/config.js."
+      "Supabase is not configured. Check assets/js/config.js."
     );
     return;
   }
 
-  const { data: sessionData, error: sessionError } =
-    await client.auth.getSession();
+  const {
+    data: { session },
+    error: sessionError
+  } = await client.auth.getSession();
 
   if (sessionError) {
-    showMessage(`Could not check your session: ${sessionError.message}`);
+    showMessage(`Unable to check login: ${sessionError.message}`);
     return;
   }
-
-  const session = sessionData?.session;
 
   if (!session) {
     window.location.replace("index.html");
@@ -229,17 +282,7 @@ async function loadDashboard() {
   }
 
   currentUser = session.user;
-
-  const profileName =
-    currentUser.user_metadata?.full_name ||
-    currentUser.user_metadata?.name ||
-    currentUser.email?.split("@")[0] ||
-    "User";
-
-  const nameElement = $("userName");
-  if (nameElement) {
-    nameElement.textContent = `Hello, ${profileName}`;
-  }
+  updateProfile(currentUser);
 
   const [leadsResult, activitiesResult] = await Promise.all([
     client
@@ -259,31 +302,36 @@ async function loadDashboard() {
   ]);
 
   if (leadsResult.error) {
-    showMessage(`Could not load leads: ${leadsResult.error.message}`);
+    showMessage(
+      `Unable to load businesses: ${leadsResult.error.message}`
+    );
     return;
   }
 
+  const leads = leadsResult.data || [];
+
+  let messageCount = 0;
+
   if (activitiesResult.error) {
-    console.warn(
-      "Could not load message activity count:",
+    console.error(
+      "Unable to load message activity:",
       activitiesResult.error.message
     );
+    showMessage(
+      "Leads loaded, but the message count could not be retrieved. Check the activities table permissions."
+    );
+  } else {
+    messageCount = new Set(
+      (activitiesResult.data || []).map((activity) => activity.lead_id)
+    ).size;
   }
 
-  activeLeads = leadsResult.data || [];
-
-  // Count distinct leads with a recorded first-message activity.
-  const messageCount = activitiesResult.error
-    ? 0
-    : new Set(
-        (activitiesResult.data || []).map((activity) => activity.lead_id)
-      ).size;
-
-  updateDashboard(activeLeads, messageCount);
+  updateStatistics(leads, messageCount);
 }
 
 async function logout() {
   const button = $("logoutButton");
+
   if (button) button.disabled = true;
 
   try {
@@ -297,7 +345,7 @@ async function logout() {
     const { error } = await client.auth.signOut();
 
     if (error) {
-      showMessage(`Could not log out: ${error.message}`);
+      showMessage(`Unable to log out: ${error.message}`);
       if (button) button.disabled = false;
       return;
     }
@@ -309,37 +357,35 @@ async function logout() {
   }
 }
 
-function setupGlobalSearch() {
+function setupSearch() {
   const searchInput = $("globalSearch");
   if (!searchInput) return;
 
+  function goToSearch() {
+    const query = searchInput.value.trim();
+
+    const destination = query
+      ? `businesses.html?q=${encodeURIComponent(query)}`
+      : "businesses.html";
+
+    window.location.href = destination;
+  }
+
   searchInput.addEventListener("input", () => {
-    clearTimeout(searchDebounce);
-
-    searchDebounce = setTimeout(() => {
-      const query = searchInput.value.trim();
-
-      if (!query) {
-        window.location.href = "businesses.html";
-        return;
-      }
-
-      window.location.href =
-        `businesses.html?q=${encodeURIComponent(query)}`;
-    }, 350);
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(goToSearch, 600);
   });
 
   searchInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
-      clearTimeout(searchDebounce);
-      window.location.href =
-        `businesses.html?q=${encodeURIComponent(searchInput.value.trim())}`;
+      clearTimeout(searchTimeout);
+      goToSearch();
     }
   });
 }
 
 function setupNotifications() {
-  const button = $("notificationButton");
+  const button = document.querySelector(".notification-button");
   if (!button) return;
 
   button.addEventListener("click", () => {
@@ -347,11 +393,17 @@ function setupNotifications() {
   });
 }
 
-function setupAuthListener() {
-  const client = supabase;
-  if (!client) return;
+function setupLogout() {
+  const button = $("logoutButton");
+  if (button) {
+    button.addEventListener("click", logout);
+  }
+}
 
-  client.auth.onAuthStateChange((event) => {
+function setupAuthListener() {
+  if (!supabase) return;
+
+  supabase.auth.onAuthStateChange((event) => {
     if (event === "SIGNED_OUT") {
       window.location.replace("index.html");
     }
@@ -359,22 +411,19 @@ function setupAuthListener() {
 }
 
 async function initDashboard() {
-  const logoutButton = $("logoutButton");
-
-  if (logoutButton) {
-    logoutButton.addEventListener("click", logout);
-  }
-
-  setupGlobalSearch();
+  setupLogout();
+  setupSearch();
   setupNotifications();
   setupAuthListener();
 
   try {
     await loadDashboard();
   } catch (error) {
-    console.error("Dashboard initialization failed:", error);
+    console.error("Dashboard error:", error);
+
     showMessage(
-      error.message || "Unable to load the dashboard. Please refresh the page."
+      error.message ||
+        "The dashboard could not load. Please refresh and try again."
     );
   }
 }
