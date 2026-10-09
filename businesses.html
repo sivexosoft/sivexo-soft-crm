@@ -4,145 +4,167 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Businesses | Sivexo Soft CRM</title>
+  <meta name="theme-color" content="#080a18">
+  <title>All Businesses | Sivexo Soft CRM</title>
+
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/dashboard.css">
-  <style>
-    .businesses-main { margin-left:250px; padding:30px; min-height:100vh; }
-    .businesses-header { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:24px; }
-    .businesses-header h1 { margin:0 0 6px; color:var(--text); font-size:28px; }
-    .businesses-header p { margin:0; color:var(--muted); }
-    .business-toolbar { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
-    .business-toolbar input,.business-toolbar select,.business-form input,.business-form select,.business-form textarea {
-      width:100%; min-width:0; box-sizing:border-box; padding:12px; border:1px solid var(--border);
-      border-radius:9px; background:var(--surface-2); color:var(--text); font:inherit;
-    }
-    .business-toolbar input:focus,.business-toolbar select:focus,.business-form input:focus,.business-form select:focus,.business-form textarea:focus {
-      outline:1px solid var(--purple);
-    }
-    .business-card { background:var(--surface); border:1px solid var(--border); border-radius:15px; padding:20px; margin-bottom:20px; }
-    .business-table-wrap { overflow-x:auto; }
-    .business-table { width:100%; border-collapse:collapse; text-align:left; }
-    .business-table th,.business-table td { padding:13px 12px; border-bottom:1px solid var(--border); color:var(--text); font-size:13px; vertical-align:middle; }
-    .business-table th { color:var(--muted); font-size:12px; white-space:nowrap; }
-    .business-table tr:last-child td { border-bottom:0; }
-    .business-table a { color:var(--purple-light); text-decoration:none; }
-    .business-table a:hover { text-decoration:underline; }
-    .business-action { padding:7px 10px; margin:2px; border:1px solid var(--border); border-radius:7px; background:var(--surface-2); color:var(--text); cursor:pointer; }
-    .business-action:hover { border-color:var(--purple); }
-    .business-action.danger { color:#ff9aaa; }
-    .business-stage { min-width:145px; padding:7px; background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:7px; }
-    .business-count { color:var(--muted); font-size:13px; margin-bottom:12px; }
-    .business-message { display:none; padding:12px; margin-bottom:16px; border-radius:9px; overflow-wrap:anywhere; }
-    .business-message.show { display:block; }
-    .business-message.error { color:#ff9aaa; background:rgba(255,107,131,.1); }
-    .business-message.success { color:var(--success); background:rgba(67,217,163,.08); }
-    .business-modal { display:none; position:fixed; inset:0; z-index:1000; padding:20px; background:rgba(0,0,0,.75); overflow-y:auto; }
-    .business-modal.open { display:flex; align-items:flex-start; justify-content:center; }
-    .business-modal-card { width:100%; max-width:650px; margin:auto; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; }
-    .business-modal-card h2 { color:var(--text); margin-top:0; }
-    .business-form { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
-    .business-form label { display:block; color:var(--muted); font-size:12px; }
-    .business-form label input,.business-form label select,.business-form label textarea { margin-top:7px; }
-    .business-form .full { grid-column:1/-1; }
-    .business-modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; flex-wrap:wrap; }
-    .business-primary { border:0; border-radius:9px; background:var(--purple); color:white; padding:11px 16px; font-weight:600; cursor:pointer; }
-    .business-primary:disabled { opacity:.6; cursor:wait; }
-    .business-secondary { border:1px solid var(--border); border-radius:9px; background:var(--surface-2); color:var(--text); padding:11px 16px; cursor:pointer; }
-    @media(max-width:1100px) { .businesses-main { margin-left:0; padding:22px; } .business-toolbar { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-    @media(max-width:600px) { .businesses-main { padding:15px; } .business-toolbar,.business-form { grid-template-columns:1fr; } .business-form .full { grid-column:auto; } .business-card { padding:13px; } }
-  </style>
+  <link rel="stylesheet" href="assets/css/businesses.css">
+
+  <script type="module" src="assets/js/businesses.js"></script>
 </head>
-<body>
-  <main class="businesses-main">
-    <header class="businesses-header">
-      <div>
-        <h1>Businesses</h1>
-        <p>Manage, search, and organize your sales leads.</p>
+<body class="crm-page businesses-page">
+
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <img src="assets/images/logo.png" alt="Sivexo Soft logo">
+      <span class="brand-text">
+        <strong>SIVEXO</strong>
+        <small>SOFT CRM</small>
+      </span>
+    </a>
+
+    <p class="nav-label">WORKSPACE</p>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">▦</span><span>Dashboard</span></a>
+      <a class="nav-link active" href="businesses.html"><span class="nav-icon">▤</span><span>All Businesses</span></a>
+      <a class="nav-link" href="businesses.html?add=1"><span class="nav-icon">＋</span><span>Add Business</span></a>
+      <a class="nav-link" href="bulk-add.html"><span class="nav-icon">⇧</span><span>Bulk Add</span></a>
+      <a class="nav-link" href="follow-ups.html"><span class="nav-icon">◷</span><span>Follow-ups</span></a>
+      <a class="nav-link" href="messages.html"><span class="nav-icon">✉</span><span>Message Templates</span></a>
+      <a class="nav-link" href="proposals.html"><span class="nav-icon">◇</span><span>Proposals &amp; Payments</span></a>
+      <a class="nav-link" href="reports.html"><span class="nav-icon">▥</span><span>Sales Reports</span></a>
+      <a class="nav-link" href="archive.html"><span class="nav-icon">▣</span><span>Archive</span></a>
+      <a class="nav-link" href="settings.html"><span class="nav-icon">⚙</span><span>Settings</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="workspace-info">
+        <span class="status-dot"></span>
+        <span>Personal workspace</span>
       </div>
-      <div>
-        <a class="business-secondary" href="dashboard.html">Dashboard</a>
-        <button id="addBusinessButton" class="business-primary" type="button">+ Add Business</button>
-        <button id="logoutButton" class="business-secondary" type="button">Log out</button>
+      <button id="logoutButton" class="logout-btn" type="button">
+        <span>⇥</span> Log out
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <label class="global-search">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input id="globalSearch" type="search"
+          placeholder="Search businesses, contacts, email..."
+          aria-label="Search all businesses">
+      </label>
+
+      <div class="topbar-actions">
+        <button class="notification-button" type="button" aria-label="Notifications">♧
+          <span class="notification-dot"></span>
+        </button>
+        <div class="topbar-divider"></div>
+        <div class="user-profile">
+          <div class="avatar">S</div>
+          <span>Sivexo Workspace</span>
+          <span class="profile-chevron">⌄</span>
+        </div>
       </div>
     </header>
 
-    <div id="businessMessage" class="business-message" role="status" aria-live="polite"></div>
+    <div class="businesses-content">
+      <section class="page-header">
+        <div>
+          <p class="eyebrow">YOUR LEADS</p>
+          <h1>All Businesses</h1>
+          <p class="page-subtitle">View, search, filter and manage your leads.</p>
+        </div>
+        <a class="primary-button" href="businesses.html?add=1">
+          <span>＋</span> Add new lead
+        </a>
+      </section>
 
-    <section class="business-card">
-      <div class="business-toolbar">
-        <input id="searchBusinesses" type="search" placeholder="Search businesses, contacts, email..." aria-label="Search businesses">
-        <select id="filterCountry" aria-label="Filter by country">
-          <option value="">All countries</option>
-        </select>
-        <select id="filterCategory" aria-label="Filter by category">
-          <option value="">All categories</option>
-        </select>
-        <select id="filterStage" aria-label="Filter by stage">
-          <option value="">All stages</option>
-          <option value="new">New Lead</option>
-          <option value="first_message_sent">First Message Sent</option>
-          <option value="follow_up">Follow-up</option>
-          <option value="call_done">Call Done</option>
-          <option value="interested">Interested</option>
-          <option value="not_interested">Not Interested</option>
-          <option value="future_opportunity">Future Opportunity</option>
-          <option value="proposal_sent">Proposal Sent</option>
-          <option value="won">Won</option>
-          <option value="lost">Lost</option>
-        </select>
-      </div>
-      <div class="business-count" id="businessCount">Loading businesses...</div>
-      <div class="business-table-wrap">
-        <table class="business-table">
-          <thead>
-            <tr>
-              <th>Business</th>
-              <th>Contact</th>
-              <th>Country</th>
-              <th>Category</th>
-              <th>Stage</th>
-              <th>Next Follow-up</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="businessesTableBody">
-            <tr><td colspan="7">Loading businesses...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+      <div id="pageMessage" class="business-message" role="status" aria-live="polite"></div>
 
-  <div class="business-modal" id="businessModal" role="dialog" aria-modal="true" aria-labelledby="businessModalTitle">
-    <div class="business-modal-card">
-      <h2 id="businessModalTitle">Add Business</h2>
-      <div id="formMessage" class="business-message" role="alert"></div>
-      <form id="businessForm" class="business-form">
-        <input type="hidden" id="businessId">
-        <label>Business name *
-          <input id="businessName" required maxlength="200">
+      <section class="business-stats" aria-label="Business statistics">
+        <article class="business-stat stat-purple">
+          <div class="business-stat-icon">▤</div>
+          <div class="business-stat-info">
+            <span>Total businesses</span>
+            <strong id="statTotal">—</strong>
+            <small>All active leads</small>
+          </div>
+        </article>
+
+        <article class="business-stat stat-blue">
+          <div class="business-stat-icon">✉</div>
+          <div class="business-stat-info">
+            <span>Contacted</span>
+            <strong id="statContacted">—</strong>
+            <small>First message or later</small>
+          </div>
+        </article>
+
+        <article class="business-stat stat-teal">
+          <div class="business-stat-icon">◷</div>
+          <div class="business-stat-info">
+            <span>Follow-up due</span>
+            <strong id="statFollowUp">—</strong>
+            <small>Due now or overdue</small>
+          </div>
+        </article>
+
+        <article class="business-stat stat-pink">
+          <div class="business-stat-icon">♥</div>
+          <div class="business-stat-info">
+            <span>Interested</span>
+            <strong id="statInterested">—</strong>
+            <small>Potential deals</small>
+          </div>
+        </article>
+
+        <article class="business-stat stat-green">
+          <div class="business-stat-icon">✓</div>
+          <div class="business-stat-info">
+            <span>Won</span>
+            <strong id="statWon">—</strong>
+            <small>Successfully converted</small>
+          </div>
+        </article>
+      </section>
+
+      <section class="filter-panel" aria-label="Search and filters">
+        <label class="business-search">
+          <span aria-hidden="true">⌕</span>
+          <input id="businessSearch" type="search"
+            placeholder="Search by business name, email or contact...">
         </label>
-        <label>Contact person
-          <input id="businessContact" maxlength="200">
+
+        <label class="filter-control">
+          <span>Country</span>
+          <select id="countryFilter">
+            <option value="">All countries</option>
+          </select>
         </label>
-        <label>Second contact
-          <input id="businessContact2" maxlength="200">
+
+        <label class="filter-control">
+          <span>Service</span>
+          <select id="serviceFilter">
+            <option value="">All services</option>
+            <option>Web Development</option>
+            <option>App Development</option>
+            <option>Digital Marketing</option>
+            <option>Graphic Design</option>
+            <option>SEO &amp; Automation</option>
+            <option>Branding</option>
+            <option>AI Solutions</option>
+            <option>Social Media Management</option>
+          </select>
         </label>
-        <label>Email
-          <input id="businessEmail" type="email" maxlength="254">
-        </label>
-        <label>Website URL
-          <input id="businessWebsite" type="url" placeholder="https://example.com" maxlength="500">
-        </label>
-        <label>Country
-          <input id="businessCountry" maxlength="100">
-        </label>
-        <label>Category
-          <input id="businessCategory" maxlength="100" placeholder="e.g. Car Rental">
-        </label>
-        <label>Sales stage
-          <select id="businessStage">
+
+        <label class="filter-control">
+          <span>Stage</span>
+          <select id="stageFilter">
+            <option value="">All stages</option>
             <option value="new">New Lead</option>
             <option value="first_message_sent">First Message Sent</option>
             <option value="follow_up">Follow-up</option>
@@ -155,26 +177,93 @@
             <option value="lost">Lost</option>
           </select>
         </label>
-        <label>Next follow-up
-          <input id="businessFollowUp" type="datetime-local">
-        </label>
-        <label>Lead source
-          <input id="businessSource" maxlength="150" placeholder="e.g. Google, referral">
-        </label>
-        <label class="full">Address
-          <input id="businessAddress" maxlength="500">
-        </label>
-        <label class="full">Details / notes
-          <textarea id="businessDetails" rows="4" maxlength="5000"></textarea>
-        </label>
-        <div class="business-modal-actions full">
-          <button type="button" id="cancelBusinessButton" class="business-secondary">Cancel</button>
-          <button type="submit" id="saveBusinessButton" class="business-primary">Save Business</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
-  <script type="module" src="assets/js/businesses.js"></script>
+        <button id="filterButton" class="outline-button filter-button" type="button">
+          <span>▽</span> Filter
+        </button>
+      </section>
+
+      <section class="business-table-panel">
+        <div class="table-toolbar">
+          <label class="select-all-label">
+            <input id="selectAll" type="checkbox">
+            <span>Select all</span>
+          </label>
+
+          <select id="bulkAction" class="bulk-select" aria-label="Bulk actions">
+            <option value="">Bulk actions</option>
+            <option value="new">Set stage: New Lead</option>
+            <option value="first_message_sent">Set stage: First Message</option>
+            <option value="follow_up">Set stage: Follow-up</option>
+            <option value="interested">Set stage: Interested</option>
+            <option value="won">Set stage: Won</option>
+            <option value="archive">Archive selected</option>
+          </select>
+
+          <button id="applyBulkButton" class="toolbar-button" type="button">Apply</button>
+          <button id="exportButton" class="toolbar-button" type="button">
+            <span>⇩</span> Export CSV
+          </button>
+          <a class="toolbar-button" href="bulk-add.html"><span>＋</span> Add to bulk</a>
+
+          <div class="pagination-info" id="paginationInfo">Showing 0 businesses</div>
+          <div class="pagination" aria-label="Pagination">
+            <button id="prevPage" type="button" aria-label="Previous page">‹</button>
+            <span id="pageNumber" class="page-number">1</span>
+            <button id="nextPage" type="button" aria-label="Next page">›</button>
+          </div>
+        </div>
+
+        <div class="business-table-wrap">
+          <table class="business-table">
+            <thead>
+              <tr>
+                <th class="checkbox-column"></th>
+                <th>BUSINESS</th>
+                <th>CONTACT</th>
+                <th>COUNTRY</th>
+                <th>SERVICES</th>
+                <th>STAGE</th>
+                <th>NEXT FOLLOW-UP</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="businessTableBody">
+              <tr>
+                <td colspan="8" class="table-empty">Loading your businesses…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <span id="tableSummary">Loading leads from your workspace…</span>
+          <label class="rows-per-page">
+            Rows
+            <select id="pageSize">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <footer class="businesses-footer">
+        <span>Sivexo Soft CRM</span>
+        <span>Manage relationships. Grow your business.</span>
+      </footer>
+    </div>
+  </main>
+
+  <script type="module">
+    const search = document.getElementById("globalSearch");
+    const localSearch = document.getElementById("businessSearch");
+    search?.addEventListener("input", () => {
+      localSearch.value = search.value;
+      localSearch.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  </script>
 </body>
 </html>
