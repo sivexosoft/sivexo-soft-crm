@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050b1e">
+  <title>Bulk Add | Sivexo Soft CRM</title>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/bulk-add.css">
+  <script type="module" src="assets/js/bulk-add.js"></script>
+</head>
+<body class="crm-page">
+
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <img src="assets/images/logo.png" alt="Sivexo Soft logo">
+      <span class="brand-text">
+        <strong>SIVEXO</strong>
+        <small>SOFT CRM</small>
+      </span>
+    </a>
+
+    <p class="nav-label">WORKSPACE</p>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+      <a class="nav-link" href="businesses.html"><span class="nav-icon">▦</span><span>All Businesses</span></a>
+      <a class="nav-link" href="add-business.html"><span class="nav-icon">＋</span><span>Add Business</span></a>
+      <a class="nav-link active" href="bulk-add.html"><span class="nav-icon">⇧</span><span>Bulk Add</span></a>
+      <a class="nav-link" href="follow-ups.html"><span class="nav-icon">◷</span><span>Follow-ups</span></a>
+      <a class="nav-link" href="messages.html"><span class="nav-icon">✉</span><span>Message Templates</span></a>
+      <a class="nav-link" href="proposals.html"><span class="nav-icon">◇</span><span>Proposals &amp; Payments</span></a>
+      <a class="nav-link" href="reports.html"><span class="nav-icon">▥</span><span>Sales Reports</span></a>
+      <a class="nav-link" href="archive.html"><span class="nav-icon">▣</span><span>Archive</span></a>
+      <a class="nav-link" href="settings.html"><span class="nav-icon">⚙</span><span>Settings</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="workspace-info">
+        <span class="status-dot"></span>
+        <span>Personal workspace</span>
+      </div>
+      <button id="logoutButton" class="logout-btn" type="button">⇥ &nbsp; Log out</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <label class="global-search">
+        <span class="search-icon">⌕</span>
+        <input id="globalSearch" type="search"
+          placeholder="Search businesses, contacts, email..."
+          aria-label="Search businesses">
+      </label>
+      <div class="topbar-actions">
+        <button class="notification-button" type="button" aria-label="Notifications">♧<span class="notification-dot"></span></button>
+        <div class="topbar-divider"></div>
+        <div class="user-profile">
+          <div class="avatar" id="userAvatar">S</div>
+          <span id="userLabel">Sivexo Workspace</span>
+          <span class="profile-chevron">⌄</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bulk-content">
+      <section class="page-header">
+        <p class="eyebrow">BULK ADD</p>
+        <h1>Import Multiple Businesses</h1>
+        <p class="page-subtitle">Save time by uploading a CSV file with your business leads. We'll handle the rest.</p>
+      </section>
+
+      <div id="bulkMessage" class="form-message" role="status" aria-live="polite"></div>
+
+      <div class="bulk-layout">
+        <!-- Left column -->
+        <section class="upload-panel">
+          <div class="panel-heading">
+            <span class="heading-icon">⇧</span>
+            <h2>Upload CSV File</h2>
+          </div>
+
+          <input id="csvFile" type="file" accept=".csv,text/csv" hidden>
+
+          <div id="dropZone" class="drop-zone" role="button" tabindex="0"
+            aria-label="Choose a CSV file or drag one here">
+            <div class="upload-cloud">☁</div>
+            <h3 id="dropTitle">Drag and drop your CSV file here</h3>
+            <p>or click to browse</p>
+            <small>Supported format: CSV &nbsp;·&nbsp; Max file size: 5MB</small>
+            <button id="chooseFileButton" class="outline-button" type="button">▱ &nbsp; Choose File</button>
+          </div>
+
+          <div id="fileInfo" class="file-info" hidden>
+            <span class="file-icon">▤</span>
+            <div class="file-details">
+              <strong id="fileName">businesses.csv</strong>
+              <small id="fileMeta">0 rows</small>
+            </div>
+            <button id="removeFileButton" class="icon-button" type="button" aria-label="Remove file">×</button>
+          </div>
+
+          <div class="requirements">
+            <h3><span class="heading-icon">ⓘ</span> CSV Requirements</h3>
+            <ul>
+              <li>Use the exact column names from the sample file.</li>
+              <li>Required fields: <strong>business_name, contact, country</strong>.</li>
+              <li>Services should be separated by commas inside a quoted CSV cell.</li>
+              <li>Follow-up date format: <strong>YYYY-MM-DD</strong> or <strong>YYYY-MM-DD HH:MM</strong>.</li>
+              <li>Do not include empty rows.</li>
+            </ul>
+            <button id="downloadSample" class="text-link" type="button">⇩ &nbsp; Download sample CSV file</button>
+          </div>
+
+          <div class="import-options">
+            <div class="panel-heading">
+              <span class="heading-icon">⚙</span>
+              <h2>Import Options</h2>
+            </div>
+
+            <div class="options-grid">
+              <label class="field">
+                <span>Default Sales Stage</span>
+                <select id="defaultStage">
+                  <option value="new">New Lead</option>
+                  <option value="first_message_sent">First Message Sent</option>
+                  <option value="follow_up">Follow-up</option>
+                  <option value="call_done">Call Done</option>
+                  <option value="interested">Interested</option>
+                  <option value="not_interested">Not Interested</option>
+                  <option value="future_opportunity">Future Opportunity</option>
+                  <option value="proposal_sent">Proposal Sent</option>
+                  <option value="won">Won</option>
+                  <option value="lost">Lost</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Duplicate Handling</span>
+                <select id="duplicateMode">
+                  <option value="skip">Skip duplicates (recommended)</option>
+                  <option value="import">Import anyway</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="archive-option">
+              <input id="importArchived" type="checkbox">
+              <span class="checkbox-visual"></span>
+              <span>Add to archive <small>(import records as inactive)</small></span>
+            </label>
+          </div>
+
+          <div class="import-actions">
+            <button id="startImport" class="primary-button" type="button" disabled>
+              <span>⇧</span> Start Import
+            </button>
+            <button id="resetImport" class="secondary-button" type="button">
+              ↻ &nbsp; Reset
+            </button>
+          </div>
+        </section>
+
+        <!-- Right column -->
+        <aside class="help-column">
+          <section class="help-panel preview-panel">
+            <div class="panel-heading">
+              <span class="heading-icon">▤</span>
+              <h2>CSV Format Example</h2>
+            </div>
+            <p class="panel-description">Your file should use column headers like these.</p>
+            <div class="preview-wrap">
+              <table class="preview-table">
+                <thead>
+                  <tr>
+                    <th>business_name</th>
+                    <th>contact</th>
+                    <th>email</th>
+                    <th>country</th>
+                    <th>category</th>
+                    <th>services</th>
+                    <th>stage</th>
+                    <th>next_follow_up_at</th>
+                  </tr>
+                </thead>
+                <tbody id="previewTable">
+                  <tr>
+                    <td>Global Rentals Ltd</td>
+                    <td>John Smith</td>
+                    <td>contact@company.com</td>
+                    <td>Guyana</td>
+                    <td>Car Rental</td>
+                    <td>Web Development, SEO</td>
+                    <td>new</td>
+                    <td>2026-10-15</td>
+                  </tr>
+                  <tr>
+                    <td>Tropical Tours</td>
+                    <td>Jane Doe</td>
+                    <td>hello@tropicaltours.com</td>
+                    <td>Tanzania</td>
+                    <td>Travel</td>
+                    <td>Digital Marketing</td>
+                    <td>interested</td>
+                    <td>2026-10-18</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p id="previewSummary" class="preview-summary">Upload a CSV to preview your actual rows here.</p>
+          </section>
+
+          <section class="help-panel">
+            <div class="panel-heading">
+              <span class="heading-icon">◇</span>
+              <h2>Services List</h2>
+            </div>
+            <div class="service-tags">
+              <span>Web Development</span>
+              <span>App Development</span>
+              <span>Digital Marketing</span>
+              <span>Graphic Design</span>
+              <span>SEO &amp; Automation</span>
+              <span>Branding</span>
+              <span>AI Solutions</span>
+              <span>Social Media Management</span>
+            </div>
+          </section>
+
+          <section class="help-panel">
+            <div class="panel-heading">
+              <span class="heading-icon">⚑</span>
+              <h2>Lead Stages</h2>
+            </div>
+            <div class="stage-legend">
+              <span><i class="dot purple"></i>New Lead</span>
+              <span><i class="dot red"></i>Not Interested</span>
+              <span><i class="dot blue"></i>First Message Sent</span>
+              <span><i class="dot teal"></i>Future Opportunity</span>
+              <span><i class="dot orange"></i>Follow-up</span>
+              <span><i class="dot cyan"></i>Proposal Sent</span>
+              <span><i class="dot amber"></i>Call Done</span>
+              <span><i class="dot green"></i>Won</span>
+              <span><i class="dot pink"></i>Interested</span>
+              <span><i class="dot gray"></i>Lost</span>
+            </div>
+          </section>
+
+          <section class="help-panel help-tip">
+            <div class="panel-heading">
+              <span class="heading-icon">♧</span>
+              <h2>Need Help?</h2>
+            </div>
+            <p>If your import has issues, check the CSV format and make sure all required fields are filled in. Review the preview and validation results before importing.</p>
+            <a href="businesses.html">View All Businesses →</a>
+          </section>
+        </aside>
+      </div>
+
+      <section id="validationPanel" class="validation-panel" hidden>
+        <div class="panel-heading">
+          <span class="heading-icon">✓</span>
+          <h2>Import Validation</h2>
+        </div>
+        <div class="validation-stats">
+          <span>Rows: <strong id="rowCount">0</strong></span>
+          <span>Ready: <strong id="validCount">0</strong></span>
+          <span>Errors: <strong id="errorCount">0</strong></span>
+          <span>Duplicates: <strong id="duplicateCount">0</strong></span>
+        </div>
+        <div class="validation-wrap">
+          <table class="validation-table">
+            <thead><tr><th>Row</th><th>Business</th><th>Status</th><th>Details</th></tr></thead>
+            <tbody id="validationTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="dashboard-footer">
+        <span>Sivexo Soft CRM</span>
+        <span>Manage relationships. Grow your business.</span>
+      </footer>
+    </div>
+  </main>
+</body>
+</html>
