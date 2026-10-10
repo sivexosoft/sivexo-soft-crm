@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050b1d">
+  <title>Follow-ups | Sivexo Soft CRM</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/follow-ups.css">
+  <script type="module" src="assets/js/follow-ups.js"></script>
+</head>
+<body class="followups-page">
+
+  <aside class="fu-sidebar">
+    <a class="fu-brand" href="dashboard.html">
+      <img src="assets/images/logo.png" alt="Sivexo Soft logo">
+      <span><strong>SIVEXO</strong><small>SOFT CRM</small></span>
+    </a>
+
+    <p class="nav-label">WORKSPACE</p>
+    <nav class="fu-nav">
+      <a href="dashboard.html"><span>▦</span>Dashboard</a>
+      <a href="businesses.html"><span>▤</span>All Businesses</a>
+      <a href="add-business.html"><span>＋</span>Add Business</a>
+      <a href="bulk-add.html"><span>⇧</span>Bulk Add</a>
+      <a class="active" href="follow-ups.html"><span>◷</span>Follow-ups</a>
+      <a href="messages.html"><span>✉</span>Message Templates</a>
+      <a href="proposals.html"><span>◇</span>Proposals &amp; Payments</a>
+      <a href="reports.html"><span>▥</span>Sales Reports</a>
+      <a href="archive.html"><span>▣</span>Archive</a>
+      <a href="settings.html"><span>⚙</span>Settings</a>
+    </nav>
+
+    <div class="fu-sidebar-bottom">
+      <p><span class="status-dot"></span> Personal workspace</p>
+      <button id="logoutButton" class="logout-btn" type="button">⇥ Log out</button>
+    </div>
+  </aside>
+
+  <main class="fu-main">
+    <header class="fu-topbar">
+      <label class="global-search">
+        <span>⌕</span>
+        <input id="globalSearch" type="search"
+          placeholder="Search businesses, contacts, email...">
+      </label>
+      <div class="fu-profile">
+        <span class="notification-icon">♧</span>
+        <span class="profile-avatar">S</span>
+        <span>Sivexo Workspace　⌄</span>
+      </div>
+    </header>
+
+    <div class="fu-content">
+      <section class="fu-heading">
+        <div>
+          <p class="eyebrow">FOLLOW-UPS</p>
+          <h1>Upcoming Follow-ups</h1>
+          <p class="muted">Stay on track with your leads. View and manage all scheduled follow-ups.</p>
+        </div>
+        <a class="primary-button" href="businesses.html">＋ View all leads</a>
+      </section>
+
+      <div id="followUpsMessage" class="fu-message" role="status"></div>
+
+      <section class="fu-stats">
+        <article class="fu-stat purple">
+          <div class="stat-icon">▦</div>
+          <div><span>Total Follow-ups</span><strong id="totalFollowUps">—</strong><small>Scheduled reminders</small></div>
+        </article>
+        <article class="fu-stat blue">
+          <div class="stat-icon">◷</div>
+          <div><span>Due Today</span><strong id="dueToday">—</strong><small>Action required</small></div>
+        </article>
+        <article class="fu-stat teal">
+          <div class="stat-icon">▣</div>
+          <div><span>Overdue</span><strong id="overdueCount">—</strong><small>Past due date</small></div>
+        </article>
+        <article class="fu-stat pink">
+          <div class="stat-icon">✓</div>
+          <div><span>Completed</span><strong id="completedCount">—</strong><small>Completion tracking</small></div>
+        </article>
+        <article class="fu-stat green">
+          <div class="stat-icon">☆</div>
+          <div><span>Conversion Rate</span><strong id="conversionRate">—</strong><small>Won leads / active leads</small></div>
+        </article>
+      </section>
+
+      <section class="fu-filters">
+        <label class="fu-search">
+          <span>⌕</span>
+          <input id="followUpSearch" type="search"
+            placeholder="Search by business name, contact, or email...">
+        </label>
+
+        <label class="fu-select">Country
+          <select id="countryFilter"><option value="">All countries</option></select>
+        </label>
+
+        <label class="fu-select">Stage
+          <select id="stageFilter">
+            <option value="">All stages</option>
+            <option value="new">New Lead</option>
+            <option value="first_message_sent">First Message Sent</option>
+            <option value="follow_up">Follow-up</option>
+            <option value="call_done">Call Done</option>
+            <option value="interested">Interested</option>
+            <option value="not_interested">Not Interested</option>
+            <option value="future_opportunity">Future Opportunity</option>
+            <option value="proposal_sent">Proposal Sent</option>
+            <option value="won">Won</option>
+            <option value="lost">Lost</option>
+          </select>
+        </label>
+
+        <label class="fu-select">Date range
+          <select id="dateFilter">
+            <option value="30">Next 30 days</option>
+            <option value="7">Next 7 days</option>
+            <option value="today">Today</option>
+            <option value="overdue">Overdue</option>
+            <option value="all">All dates</option>
+          </select>
+        </label>
+
+        <button id="applyFilters" class="filter-button" type="button">▽ Filter</button>
+      </section>
+
+      <section class="fu-table-panel">
+        <div class="fu-toolbar">
+          <label class="select-all"><input id="selectAll" type="checkbox"> Select all</label>
+          <button id="markCompleted" class="tool-button" type="button">✓ Mark completed</button>
+          <button id="rescheduleSelected" class="tool-button" type="button">▦ Reschedule</button>
+          <button id="sendReminder" class="tool-button" type="button">✉ Send reminder</button>
+
+          <div class="pagination">
+            <span id="showingCount">Showing 0</span>
+            <button id="prevPage" type="button">‹</button>
+            <button id="currentPage" class="page-active" type="button">1</button>
+            <button id="nextPage" type="button">›</button>
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table class="fu-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Business</th>
+                <th>Contact</th>
+                <th>Country</th>
+                <th>Stage</th>
+                <th>Next Follow-up</th>
+                <th>Services</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="followUpsTable">
+              <tr><td colspan="8" class="empty-state">Connecting to your CRM…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="fu-footer">
+        <span>Sivexo Soft CRM</span>
+        <span>Manage relationships. Grow your business.</span>
+      </footer>
+    </div>
+  </main>
+</body>
+</html>
