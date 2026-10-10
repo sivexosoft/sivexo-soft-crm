@@ -5,19 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080a18">
-  <title>Dashboard | Sivexo Soft CRM</title>
+  <title>All Businesses | Sivexo Soft CRM</title>
 
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/businesses.css">
 
-  <script type="module" src="assets/js/dashboard.js"></script>
+  <script type="module" src="assets/js/businesses.js"></script>
 </head>
+<body class="crm-page businesses-page">
 
-<body class="crm-page">
-
-  <!-- Sidebar -->
   <aside class="sidebar">
-    <a class="sidebar-brand" href="dashboard.html" aria-label="Sivexo Soft CRM home">
+    <a class="sidebar-brand" href="dashboard.html">
       <img src="assets/images/logo.png" alt="Sivexo Soft logo">
       <span class="brand-text">
         <strong>SIVEXO</strong>
@@ -28,36 +26,16 @@
     <p class="nav-label">WORKSPACE</p>
 
     <nav class="sidebar-nav" aria-label="Main navigation">
-      <a class="nav-link active" href="dashboard.html">
-        <span class="nav-icon">▦</span><span>Dashboard</span>
-      </a>
-      <a class="nav-link" href="businesses.html">
-        <span class="nav-icon">▤</span><span>All Businesses</span>
-      </a>
-      <a class="nav-link" href="businesses.html?add=1">
-        <span class="nav-icon">＋</span><span>Add Business</span>
-      </a>
-      <a class="nav-link" href="bulk-add.html">
-        <span class="nav-icon">⇧</span><span>Bulk Add</span>
-      </a>
-      <a class="nav-link" href="follow-ups.html">
-        <span class="nav-icon">◷</span><span>Follow-ups</span>
-      </a>
-      <a class="nav-link" href="messages.html">
-        <span class="nav-icon">✉</span><span>Message Templates</span>
-      </a>
-      <a class="nav-link" href="proposals.html">
-        <span class="nav-icon">◇</span><span>Proposals &amp; Payments</span>
-      </a>
-      <a class="nav-link" href="reports.html">
-        <span class="nav-icon">▥</span><span>Sales Reports</span>
-      </a>
-      <a class="nav-link" href="archive.html">
-        <span class="nav-icon">▣</span><span>Archive</span>
-      </a>
-      <a class="nav-link" href="settings.html">
-        <span class="nav-icon">⚙</span><span>Settings</span>
-      </a>
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">▦</span><span>Dashboard</span></a>
+      <a class="nav-link active" href="businesses.html"><span class="nav-icon">▤</span><span>All Businesses</span></a>
+      <a class="nav-link" href="businesses.html?add=1"><span class="nav-icon">＋</span><span>Add Business</span></a>
+      <a class="nav-link" href="bulk-add.html"><span class="nav-icon">⇧</span><span>Bulk Add</span></a>
+      <a class="nav-link" href="follow-ups.html"><span class="nav-icon">◷</span><span>Follow-ups</span></a>
+      <a class="nav-link" href="messages.html"><span class="nav-icon">✉</span><span>Message Templates</span></a>
+      <a class="nav-link" href="proposals.html"><span class="nav-icon">◇</span><span>Proposals &amp; Payments</span></a>
+      <a class="nav-link" href="reports.html"><span class="nav-icon">▥</span><span>Sales Reports</span></a>
+      <a class="nav-link" href="archive.html"><span class="nav-icon">▣</span><span>Archive</span></a>
+      <a class="nav-link" href="settings.html"><span class="nav-icon">⚙</span><span>Settings</span></a>
     </nav>
 
     <div class="sidebar-bottom">
@@ -71,29 +49,20 @@
     </div>
   </aside>
 
-  <!-- Main workspace -->
   <main class="main-content">
-
-    <!-- Top navigation -->
     <header class="topbar">
       <label class="global-search">
         <span class="search-icon" aria-hidden="true">⌕</span>
-        <input
-          id="globalSearch"
-          type="search"
+        <input id="globalSearch" type="search"
           placeholder="Search businesses, contacts, email..."
-          aria-label="Search businesses, contacts, and email"
-        >
+          aria-label="Search all businesses">
       </label>
 
       <div class="topbar-actions">
-        <button class="notification-button" type="button" aria-label="Notifications">
-          ♧
+        <button class="notification-button" type="button" aria-label="Notifications">♧
           <span class="notification-dot"></span>
         </button>
-
         <div class="topbar-divider"></div>
-
         <div class="user-profile">
           <div class="avatar">S</div>
           <span>Sivexo Workspace</span>
@@ -102,197 +71,199 @@
       </div>
     </header>
 
-    <div class="dashboard-content">
-
-      <!-- Page heading -->
+    <div class="businesses-content">
       <section class="page-header">
         <div>
-          <p class="eyebrow">YOUR SALES OVERVIEW</p>
-          <h1>Dashboard</h1>
-          <p class="page-subtitle">
-            Track your prospects and keep every opportunity moving.
-          </p>
+          <p class="eyebrow">YOUR LEADS</p>
+          <h1>All Businesses</h1>
+          <p class="page-subtitle">View, search, filter and manage your leads.</p>
         </div>
-
         <a class="primary-button" href="businesses.html?add=1">
           <span>＋</span> Add new lead
         </a>
       </section>
 
-      <div id="dashboardMessage" class="dashboard-message" role="status" aria-live="polite"></div>
+      <div id="pageMessage" class="business-message" role="status" aria-live="polite"></div>
 
-      <!-- Statistics -->
-      <section class="stats-grid" aria-label="Lead statistics">
-
-        <article class="stat-card stat-purple">
-          <div class="stat-icon">♟</div>
-          <div class="stat-info">
-            <div class="stat-heading">
-              <span class="stat-label">Total leads</span>
-            </div>
-            <strong class="stat-value" id="totalLeads">—</strong>
-            <span class="stat-note">All active businesses</span>
+      <section class="business-stats" aria-label="Business statistics">
+        <article class="business-stat stat-purple">
+          <div class="business-stat-icon">▤</div>
+          <div class="business-stat-info">
+            <span>Total businesses</span>
+            <strong id="statTotal">—</strong>
+            <small>All active leads</small>
           </div>
         </article>
 
-        <article class="stat-card stat-blue">
-          <div class="stat-icon">⊕</div>
-          <div class="stat-info">
-            <div class="stat-heading">
-              <span class="stat-label">New leads</span>
-            </div>
-            <strong class="stat-value" id="newLeads">—</strong>
-            <span class="stat-note">Waiting for outreach</span>
+        <article class="business-stat stat-blue">
+          <div class="business-stat-icon">✉</div>
+          <div class="business-stat-info">
+            <span>Contacted</span>
+            <strong id="statContacted">—</strong>
+            <small>First message or later</small>
           </div>
         </article>
 
-        <article class="stat-card stat-teal">
-          <div class="stat-icon">✉</div>
-          <div class="stat-info">
-            <div class="stat-heading">
-              <span class="stat-label">Messages sent</span>
-            </div>
-            <strong class="stat-value" id="messagesSent">—</strong>
-            <span class="stat-note">First messages recorded</span>
+        <article class="business-stat stat-teal">
+          <div class="business-stat-icon">◷</div>
+          <div class="business-stat-info">
+            <span>Follow-up due</span>
+            <strong id="statFollowUp">—</strong>
+            <small>Due now or overdue</small>
           </div>
         </article>
 
-        <article class="stat-card stat-pink">
-          <div class="stat-icon">♥</div>
-          <div class="stat-info">
-            <div class="stat-heading">
-              <span class="stat-label">Interested</span>
-            </div>
-            <strong class="stat-value" id="interestedLeads">—</strong>
-            <span class="stat-note">Potential opportunities</span>
+        <article class="business-stat stat-pink">
+          <div class="business-stat-icon">♥</div>
+          <div class="business-stat-info">
+            <span>Interested</span>
+            <strong id="statInterested">—</strong>
+            <small>Potential deals</small>
           </div>
         </article>
 
-        <article class="stat-card stat-orange">
-          <div class="stat-icon">◷</div>
-          <div class="stat-info">
-            <div class="stat-heading">
-              <span class="stat-label">Follow-ups due</span>
-            </div>
-            <strong class="stat-value" id="followUpsDue">—</strong>
-            <span class="stat-note">Due now or overdue</span>
+        <article class="business-stat stat-green">
+          <div class="business-stat-icon">✓</div>
+          <div class="business-stat-info">
+            <span>Won</span>
+            <strong id="statWon">—</strong>
+            <small>Successfully converted</small>
           </div>
         </article>
-
-        <article class="stat-card stat-green">
-          <div class="stat-icon">✓</div>
-          <div class="stat-info">
-            <div class="stat-heading">
-              <span class="stat-label">Deals won</span>
-            </div>
-            <strong class="stat-value" id="wonLeads">—</strong>
-            <span class="stat-note">Successfully converted</span>
-          </div>
-        </article>
-
       </section>
 
-      <!-- Sales pipeline -->
-      <section class="panel pipeline-panel">
-        <div class="panel-heading">
-          <div class="panel-title-group">
-            <div class="panel-heading-icon">♙</div>
-            <div>
-              <h2>Sales pipeline</h2>
-              <p>See where your leads stand.</p>
-            </div>
-          </div>
-          <a class="panel-link" href="businesses.html">View all leads <span>→</span></a>
-        </div>
+      <section class="filter-panel" aria-label="Search and filters">
+        <label class="business-search">
+          <span aria-hidden="true">⌕</span>
+          <input id="businessSearch" type="search"
+            placeholder="Search by business name, email or contact...">
+        </label>
 
-        <div class="pipeline-grid">
-          <a class="pipeline-item pipeline-purple" href="businesses.html?stage=new">
-            <div class="pipeline-label"><span class="pipeline-dot"></span>New</div>
-            <div class="pipeline-bottom">
-              <strong id="pipelineNew">—</strong>
-              <span class="pipeline-percent" id="pipelineNewPercent"></span>
-            </div>
-            <div class="pipeline-progress"><span id="pipelineNewBar"></span></div>
-          </a>
+        <label class="filter-control">
+          <span>Country</span>
+          <select id="countryFilter">
+            <option value="">All countries</option>
+          </select>
+        </label>
 
-          <a class="pipeline-item pipeline-blue" href="businesses.html?stage=first_message_sent">
-            <div class="pipeline-label"><span class="pipeline-dot"></span>First message</div>
-            <div class="pipeline-bottom">
-              <strong id="pipelineMessage">—</strong>
-              <span class="pipeline-percent" id="pipelineMessagePercent"></span>
-            </div>
-            <div class="pipeline-progress"><span id="pipelineMessageBar"></span></div>
-          </a>
+        <label class="filter-control">
+          <span>Service</span>
+          <select id="serviceFilter">
+            <option value="">All services</option>
+            <option>Web Development</option>
+            <option>App Development</option>
+            <option>Digital Marketing</option>
+            <option>Graphic Design</option>
+            <option>SEO &amp; Automation</option>
+            <option>Branding</option>
+            <option>AI Solutions</option>
+            <option>Social Media Management</option>
+          </select>
+        </label>
 
-          <a class="pipeline-item pipeline-orange" href="businesses.html?stage=follow_up">
-            <div class="pipeline-label"><span class="pipeline-dot"></span>Follow-up</div>
-            <div class="pipeline-bottom">
-              <strong id="pipelineFollowUp">—</strong>
-              <span class="pipeline-percent" id="pipelineFollowUpPercent"></span>
-            </div>
-            <div class="pipeline-progress"><span id="pipelineFollowUpBar"></span></div>
-          </a>
+        <label class="filter-control">
+          <span>Stage</span>
+          <select id="stageFilter">
+            <option value="">All stages</option>
+            <option value="new">New Lead</option>
+            <option value="first_message_sent">First Message Sent</option>
+            <option value="follow_up">Follow-up</option>
+            <option value="call_done">Call Done</option>
+            <option value="interested">Interested</option>
+            <option value="not_interested">Not Interested</option>
+            <option value="future_opportunity">Future Opportunity</option>
+            <option value="proposal_sent">Proposal Sent</option>
+            <option value="won">Won</option>
+            <option value="lost">Lost</option>
+          </select>
+        </label>
 
-          <a class="pipeline-item pipeline-pink" href="businesses.html?stage=interested">
-            <div class="pipeline-label"><span class="pipeline-dot"></span>Interested</div>
-            <div class="pipeline-bottom">
-              <strong id="pipelineInterested">—</strong>
-              <span class="pipeline-percent" id="pipelineInterestedPercent"></span>
-            </div>
-            <div class="pipeline-progress"><span id="pipelineInterestedBar"></span></div>
-          </a>
-
-          <a class="pipeline-item pipeline-green" href="businesses.html?stage=won">
-            <div class="pipeline-label"><span class="pipeline-dot"></span>Won</div>
-            <div class="pipeline-bottom">
-              <strong id="pipelineWon">—</strong>
-              <span class="pipeline-percent" id="pipelineWonPercent"></span>
-            </div>
-            <div class="pipeline-progress"><span id="pipelineWonBar"></span></div>
-          </a>
-        </div>
+        <button id="filterButton" class="outline-button filter-button" type="button">
+          <span>▽</span> Filter
+        </button>
       </section>
 
-      <!-- Follow-ups -->
-      <section class="panel followups-panel">
-        <div class="panel-heading">
-          <div class="panel-title-group">
-            <div class="panel-heading-icon calendar-icon">▦</div>
-            <div>
-              <h2>Upcoming follow-ups</h2>
-              <p>Your next actions, in one place.</p>
-            </div>
+      <section class="business-table-panel">
+        <div class="table-toolbar">
+          <label class="select-all-label">
+            <input id="selectAll" type="checkbox">
+            <span>Select all</span>
+          </label>
+
+          <select id="bulkAction" class="bulk-select" aria-label="Bulk actions">
+            <option value="">Bulk actions</option>
+            <option value="new">Set stage: New Lead</option>
+            <option value="first_message_sent">Set stage: First Message</option>
+            <option value="follow_up">Set stage: Follow-up</option>
+            <option value="interested">Set stage: Interested</option>
+            <option value="won">Set stage: Won</option>
+            <option value="archive">Archive selected</option>
+          </select>
+
+          <button id="applyBulkButton" class="toolbar-button" type="button">Apply</button>
+          <button id="exportButton" class="toolbar-button" type="button">
+            <span>⇩</span> Export CSV
+          </button>
+          <a class="toolbar-button" href="bulk-add.html"><span>＋</span> Add to bulk</a>
+
+          <div class="pagination-info" id="paginationInfo">Showing 0 businesses</div>
+          <div class="pagination" aria-label="Pagination">
+            <button id="prevPage" type="button" aria-label="Previous page">‹</button>
+            <span id="pageNumber" class="page-number">1</span>
+            <button id="nextPage" type="button" aria-label="Next page">›</button>
           </div>
-          <a class="panel-link" href="follow-ups.html">View reminders <span>→</span></a>
         </div>
 
-        <div class="table-wrap">
-          <table class="dashboard-table">
+        <div class="business-table-wrap">
+          <table class="business-table">
             <thead>
               <tr>
-                <th>Business</th>
-                <th>Country</th>
-                <th>Next follow-up</th>
-                <th>Stage</th>
-                <th>Action</th>
+                <th class="checkbox-column"></th>
+                <th>BUSINESS</th>
+                <th>CONTACT</th>
+                <th>COUNTRY</th>
+                <th>SERVICES</th>
+                <th>STAGE</th>
+                <th>NEXT FOLLOW-UP</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
-            <tbody id="followUpsTable">
+            <tbody id="businessTableBody">
               <tr>
-                <td colspan="5" class="empty-state">Connecting to your CRM…</td>
+                <td colspan="8" class="table-empty">Loading your businesses…</td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <div class="table-footer">
+          <span id="tableSummary">Loading leads from your workspace…</span>
+          <label class="rows-per-page">
+            Rows
+            <select id="pageSize">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </label>
+        </div>
       </section>
 
-      <footer class="dashboard-footer">
+      <footer class="businesses-footer">
         <span>Sivexo Soft CRM</span>
         <span>Manage relationships. Grow your business.</span>
       </footer>
-
     </div>
   </main>
 
+  <script type="module">
+    const search = document.getElementById("globalSearch");
+    const localSearch = document.getElementById("businessSearch");
+    search?.addEventListener("input", () => {
+      localSearch.value = search.value;
+      localSearch.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  </script>
 </body>
 </html>
