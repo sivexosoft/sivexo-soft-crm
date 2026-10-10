@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080a18">
+  <title>Add Business | Sivexo Soft CRM</title>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/add-business.css">
+  <script type="module" src="assets/js/add-business.js"></script>
+</head>
+<body class="crm-page">
+
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <img src="assets/images/logo.png" alt="Sivexo Soft logo">
+      <span class="brand-text"><strong>SIVEXO</strong><small>SOFT CRM</small></span>
+    </a>
+
+    <p class="nav-label">WORKSPACE</p>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">▦</span><span>Dashboard</span></a>
+      <a class="nav-link" href="businesses.html"><span class="nav-icon">▤</span><span>All Businesses</span></a>
+      <a class="nav-link active" href="add-business.html"><span class="nav-icon">＋</span><span>Add Business</span></a>
+      <a class="nav-link" href="bulk-add.html"><span class="nav-icon">⇧</span><span>Bulk Add</span></a>
+      <a class="nav-link" href="follow-ups.html"><span class="nav-icon">◷</span><span>Follow-ups</span></a>
+      <a class="nav-link" href="messages.html"><span class="nav-icon">✉</span><span>Message Templates</span></a>
+      <a class="nav-link" href="proposals.html"><span class="nav-icon">◇</span><span>Proposals &amp; Payments</span></a>
+      <a class="nav-link" href="reports.html"><span class="nav-icon">▥</span><span>Sales Reports</span></a>
+      <a class="nav-link" href="archive.html"><span class="nav-icon">▣</span><span>Archive</span></a>
+      <a class="nav-link" href="settings.html"><span class="nav-icon">⚙</span><span>Settings</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="workspace-info"><span class="status-dot"></span><span>Personal workspace</span></div>
+      <button id="logoutButton" class="logout-btn" type="button"><span>⇥</span> Log out</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <label class="global-search">
+        <span class="search-icon">⌕</span>
+        <input id="globalSearch" type="search" placeholder="Search businesses, contacts, email..." aria-label="Search CRM">
+      </label>
+      <div class="topbar-actions">
+        <button class="notification-button" type="button" aria-label="Notifications">♧<span class="notification-dot"></span></button>
+        <div class="topbar-divider"></div>
+        <div class="user-profile"><div class="avatar">S</div><span>Sivexo Workspace</span><span class="profile-chevron">⌄</span></div>
+      </div>
+    </header>
+
+    <div class="add-content">
+      <section class="page-header">
+        <div>
+          <p class="eyebrow">ADD BUSINESS</p>
+          <h1>Add New Business</h1>
+          <p class="page-subtitle">Capture new leads and keep your pipeline growing.</p>
+        </div>
+      </section>
+
+      <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+
+      <form id="businessForm">
+        <div class="form-layout">
+          <div class="form-main-column">
+
+            <section class="form-panel">
+              <div class="form-panel-heading"><span class="section-icon">▦</span><h2>Business Information</h2></div>
+              <div class="form-grid">
+                <label class="field">
+                  <span>Business Name <b>*</b></span>
+                  <input name="business_name" required maxlength="160" placeholder="e.g. Global Rentals Ltd">
+                </label>
+                <label class="field">
+                  <span>Website URL</span>
+                  <input name="website_url" type="url" placeholder="https://example.com">
+                </label>
+                <label class="field">
+                  <span>Category <b>*</b></span>
+                  <select name="category" id="category" required>
+                    <option value="">Select category</option>
+                    <option>Car Rental</option>
+                    <option>Travel &amp; Tourism</option>
+                    <option>Safari Tours</option>
+                    <option>Hospitality</option>
+                    <option>Real Estate</option>
+                    <option>Healthcare</option>
+                    <option>Construction</option>
+                    <option>Logistics</option>
+                    <option>Retail</option>
+                    <option>IT Services</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Country <b>*</b></span>
+                  <select name="country" id="country" required>
+                    <option value="">Select country</option>
+                    <option>Guyana</option><option>Tanzania</option><option>Maldives</option>
+                    <option>Kenya</option><option>United Arab Emirates</option><option>United Kingdom</option>
+                    <option>Germany</option><option>United States</option><option>Australia</option>
+                    <option>South Africa</option><option>Pakistan</option><option>India</option>
+                    <option>Canada</option><option>Other</option>
+                  </select>
+                </label>
+                <label class="field field-full">
+                  <span>Address</span>
+                  <textarea name="address" rows="2" maxlength="300" placeholder="Full address (optional)"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section class="form-panel">
+              <div class="form-panel-heading"><span class="section-icon person-icon">♙</span><h2>Contact Details</h2></div>
+              <div class="form-grid">
+                <label class="field">
+                  <span>Main Contact <b>*</b></span>
+                  <input name="contact" required maxlength="160" placeholder="e.g. John Smith">
+                </label>
+                <label class="field">
+                  <span>Second Contact (optional)</span>
+                  <input name="contact_2" maxlength="160" placeholder="e.g. Jane Doe">
+                </label>
+                <label class="field">
+                  <span>Email Address</span>
+                  <input name="email" type="email" maxlength="254" placeholder="e.g. contact@company.com">
+                </label>
+                <label class="field">
+                  <span>Phone Number</span>
+                  <input name="phone_number" type="tel" maxlength="40" placeholder="e.g. +1 555 123 4567">
+                </label>
+              </div>
+              <p class="field-hint">Phone numbers are saved in the lead notes unless your Supabase leads table has a dedicated phone_number column.</p>
+            </section>
+
+            <section class="form-panel">
+              <div class="form-panel-heading"><span class="section-icon">▱</span><h2>Services &amp; Stage</h2></div>
+              <div class="form-grid">
+                <fieldset class="field field-full service-fieldset">
+                  <legend>Services (multiple selection) <b>*</b></legend>
+                  <div class="service-options">
+                    <label class="service-option"><input type="checkbox" name="services" value="Web Development"><span>Web Development</span></label>
+                    <label class="service-option"><input type="checkbox" name="services" value="App Development"><span>App Development</span></label>
+                    <label class="service-option"><input type="checkbox" name="services" value="Digital Marketing"><span>Digital Marketing</span></label>
+                    <label class="service-option"><input type="checkbox" name="services" value="Graphic Design"><span>Graphic Design</span></label>
+                    <label class="service-option"><input type="checkbox" name="services" value="SEO & Automation"><span>SEO &amp; Automation</span></label>
+                    <label class="service-option"><input type="checkbox" name="services" value="Branding"><span>Branding</span></label>
+                    <label class="service-option"><input type="checkbox" name="services" value="AI Solutions"><span>AI Solutions</span></label>
+                    <label class="service-option"><input type="checkbox" name="services" value="Social Media Management"><span>Social Media Management</span></label>
+                  </div>
+                </fieldset>
+                <label class="field field-full">
+                  <span>Sales Stage <b>*</b></span>
+                  <select name="stage" id="stage" required>
+                    <option value="new">New Lead</option>
+                    <option value="first_message_sent">First Message Sent</option>
+                    <option value="follow_up">Follow-up</option>
+                    <option value="call_done">Call Done</option>
+                    <option value="interested">Interested</option>
+                    <option value="not_interested">Not Interested</option>
+                    <option value="future_opportunity">Future Opportunity</option>
+                    <option value="proposal_sent">Proposal Sent</option>
+                    <option value="won">Won</option>
+                    <option value="lost">Lost</option>
+                  </select>
+                </label>
+              </div>
+            </section>
+
+          </div>
+
+          <aside class="form-side-column">
+            <section class="form-panel">
+              <div class="form-panel-heading"><span class="section-icon">▤</span><h2>Notes &amp; Follow-up</h2></div>
+              <label class="field">
+                <span class="visually-hidden">Additional details and notes</span>
+                <textarea id="optionalDetails" name="optional_details" rows="5" maxlength="500" placeholder="Additional details, notes or special requirements..."></textarea>
+                <span class="character-count"><span id="noteCount">0</span>/500</span>
+              </label>
+              <label class="field followup-field">
+                <span>Next Follow-up Date</span>
+                <input name="next_follow_up_at" type="datetime-local">
+              </label>
+              <label class="archive-toggle">
+                <input name="is_archived" type="checkbox" id="isArchived">
+                <span class="toggle-track"></span>
+                <span><strong>Add to archive?</strong><small>Keep this lead active (recommended)</small></span>
+              </label>
+            </section>
+
+            <section class="form-panel quick-panel">
+              <div class="form-panel-heading"><span class="section-icon">ϟ</span><h2>Quick Actions</h2></div>
+              <label class="quick-check">
+                <input type="checkbox" id="prepareWelcome">
+                <span><strong>Prepare welcome message</strong><small>Prepare a template after saving this lead</small></span>
+              </label>
+              <label class="field">
+                <span>Message Template</span>
+                <select id="messageTemplate">
+                  <option value="intro">Introduction message</option>
+                  <option value="website">Website services offer</option>
+                  <option value="followup">Friendly follow-up</option>
+                </select>
+              </label>
+              <p class="field-hint">This prepares text only; it does not send an email or WhatsApp message.</p>
+            </section>
+
+            <section class="form-panel summary-panel">
+              <div class="form-panel-heading"><span class="section-icon">▧</span><h2>Summary</h2></div>
+              <dl class="summary-list">
+                <div><dt>Business</dt><dd id="summaryBusiness">—</dd></div>
+                <div><dt>Contact</dt><dd id="summaryContact">—</dd></div>
+                <div><dt>Country</dt><dd id="summaryCountry">—</dd></div>
+                <div><dt>Services</dt><dd id="summaryServices">—</dd></div>
+                <div><dt>Stage</dt><dd><span class="stage-badge" id="summaryStage">New Lead</span></dd></div>
+              </dl>
+            </section>
+          </aside>
+        </div>
+
+        <div class="form-actions">
+          <button class="primary-button save-button" id="saveBusinessButton" type="submit"><span>＋</span> Save Business</button>
+          <button class="secondary-button" id="resetFormButton" type="reset"><span>↻</span> Reset Form</button>
+        </div>
+      </form>
+
+      <footer class="dashboard-footer">
+        <span>Sivexo Soft CRM</span><span>Manage relationships. Grow your business.</span>
+      </footer>
+    </div>
+  </main>
+</body>
+</html>
