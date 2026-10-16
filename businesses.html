@@ -6,14 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080a18">
   <title>All Businesses | Sivexo Soft CRM</title>
+  <meta name="description" content="Manage, search, filter, and update your business leads.">
 
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/businesses.css">
 
   <script type="module" src="assets/js/businesses.js"></script>
 </head>
-<body class="crm-page businesses-page">
 
+<body class="crm-page businesses-page">
   <aside class="sidebar">
     <a class="sidebar-brand" href="dashboard.html">
       <img src="assets/images/logo.png" alt="Sivexo Soft logo">
@@ -78,12 +79,14 @@
           <h1>All Businesses</h1>
           <p class="page-subtitle">View, search, filter and manage your leads.</p>
         </div>
-        <a class="primary-button" href="add-business.html?add=1">
+
+        <a class="primary-button" href="add-business.html">
           <span>＋</span> Add new lead
         </a>
       </section>
 
-      <div id="pageMessage" class="business-message" role="status" aria-live="polite"></div>
+      <div id="pageMessage" class="business-message"
+        role="status" aria-live="polite"></div>
 
       <section class="business-stats" aria-label="Business statistics">
         <article class="business-stat stat-purple">
@@ -201,15 +204,20 @@
           </select>
 
           <button id="applyBulkButton" class="toolbar-button" type="button">Apply</button>
+
           <button id="exportButton" class="toolbar-button" type="button">
             <span>⇩</span> Export CSV
           </button>
-          <a class="toolbar-button" href="bulk-add.html"><span>＋</span> Add to bulk</a>
+
+          <a class="toolbar-button" href="bulk-add.html">
+            <span>＋</span> Add to bulk
+          </a>
 
           <div class="pagination-info" id="paginationInfo">Showing 0 businesses</div>
+
           <div class="pagination" aria-label="Pagination">
             <button id="prevPage" type="button" aria-label="Previous page">‹</button>
-            <span id="pageNumber" class="page-number">1</span>
+            <span id="pageNumber" class="page-number">1 / 1</span>
             <button id="nextPage" type="button" aria-label="Next page">›</button>
           </div>
         </div>
@@ -228,6 +236,7 @@
                 <th>ACTIONS</th>
               </tr>
             </thead>
+
             <tbody id="businessTableBody">
               <tr>
                 <td colspan="8" class="table-empty">Loading your businesses…</td>
@@ -257,12 +266,16 @@
     </div>
   </main>
 
+  <div id="businessModalRoot"></div>
+
   <script type="module">
-    const search = document.getElementById("globalSearch");
-    const localSearch = document.getElementById("businessSearch");
-    search?.addEventListener("input", () => {
-      localSearch.value = search.value;
-      localSearch.dispatchEvent(new Event("input", { bubbles: true }));
+    const globalSearch = document.getElementById("globalSearch");
+    const businessSearch = document.getElementById("businessSearch");
+
+    globalSearch?.addEventListener("input", () => {
+      if (!businessSearch) return;
+      businessSearch.value = globalSearch.value;
+      businessSearch.dispatchEvent(new Event("input", { bubbles: true }));
     });
   </script>
 </body>
